@@ -54,7 +54,6 @@
 
   function montarCard(imovel, indiceImovel) {
     var linkWhatsapp = montarWhatsapp(imovel.whatsapp, imovel.nome);
-    var pageLink = String(imovel.pagina || "#");
     return (
       '<article class="card" id="' +
       escAttr(imovel.id) +
@@ -109,9 +108,6 @@
       '<a class="cta" href="' +
       escAttr(linkWhatsapp) +
       '" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>' +
-      '<a class="cta secondary" href="' +
-      escAttr(pageLink) +
-      '">Ver pagina do imovel</a>' +
       "</div>" +
       "</div>" +
       "</article>"
