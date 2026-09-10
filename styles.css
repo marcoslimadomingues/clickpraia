@@ -605,32 +605,6 @@ footer p {
   color: var(--muted);
 }
 
-/* Sobre Canoa Quebrada - accordion na home */
-.sobre-canoa details {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 8px;
-  background: var(--surface);
-}
-
-.sobre-canoa summary {
-  cursor: pointer;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-
-.sobre-canoa summary h2 {
-  margin: 0;
-  font-size: clamp(1.05rem, 3.6vw, 1.25rem);
-}
-
-.sobre-canoa p {
-  margin: 8px 0 4px;
-  color: var(--muted);
-}
-
 /* Hub de praia */
 .filtros {
   display: grid;
