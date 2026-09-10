@@ -1,0 +1,18 @@
+# ClickPraia
+
+Aluguel de temporada em praias do Ceará, com foco em Canoa Quebrada (Aracati/CE).
+Reserva direto no WhatsApp, sem formulário e sem carrinho.
+
+## Praias
+- [Canoa Quebrada](https://clickpraia.com.br/canoa-quebrada/) — casas e imóveis para temporada em Canoa Quebrada, Aracati/CE.
+
+## Guias
+- [Como ir de Fortaleza a Canoa Quebrada](https://clickpraia.com.br/guias/como-ir-de-fortaleza-a-canoa-quebrada/)
+- [O que fazer em Canoa Quebrada em 3 dias](https://clickpraia.com.br/guias/o-que-fazer-em-canoa-quebrada-em-3-dias/)
+- [Réveillon e Carnaval em Canoa Quebrada](https://clickpraia.com.br/guias/reveillon-e-carnaval-em-canoa-quebrada/)
+- [Canoa Quebrada com crianças](https://clickpraia.com.br/guias/canoa-quebrada-com-criancas/)
+- [Onde ficar em Canoa Quebrada](https://clickpraia.com.br/guias/onde-ficar-em-canoa-quebrada/)
+
+## Contato
+WhatsApp: +55 85 99428-8060
+Site: https://clickpraia.com.br/

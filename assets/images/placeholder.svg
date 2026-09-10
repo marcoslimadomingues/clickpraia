@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-label="Imagem indisponivel">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c8dce9"/>
+      <stop offset="100%" stop-color="#9ebbcf"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="800" fill="url(#bg)"/>
+  <g fill="#2d5571" opacity="0.9">
+    <circle cx="380" cy="250" r="70"/>
+    <path d="M120 620l220-220 140 140 240-250 430 330H120z"/>
+  </g>
+  <text x="50%" y="700" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" fill="#13364d">
+    Adicione a foto do imovel nesta posicao
+  </text>
+</svg>

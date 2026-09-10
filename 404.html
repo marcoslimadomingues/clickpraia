@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Página não encontrada | ClickPraia</title>
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#0a5c8a">
+  <link rel="canonical" href="https://clickpraia.com.br/404.html">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="brand-row"><p class="brand">clickpraia.com.br</p></div>
+      <div class="hero">
+        <h1>Página não encontrada</h1>
+        <p class="subtitle">O link pode ter mudado. Procure pela praia ou volte para a página inicial.</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="section-intro">
+        <h2>Buscar por praia</h2>
+        <label for="busca-praia" class="visually-hidden">Digite o nome da praia</label>
+        <input type="search" id="busca-praia" placeholder="Ex.: Canoa Quebrada" style="width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:1rem;margin-top:10px;">
+      </div>
+
+      <ul class="lista-outros" id="lista-praias" style="padding:16px;">
+        <li><a href="/canoa-quebrada/" data-praia="canoa quebrada">Canoa Quebrada</a></li>
+      </ul>
+
+      <div class="section-intro">
+        <p><a href="/">Voltar para a página inicial</a></p>
+      </div>
+    </main>
+
+    <footer>
+      <p>ClickPraia | Atendimento direto por WhatsApp</p>
+    </footer>
+
+    <div class="sticky-cta">
+      <a class="cta" href="https://wa.me/558599428060?text=Ola%21%20Nao%20encontrei%20a%20pagina%20que%20procurava%20no%20site." target="_blank" rel="noopener noreferrer">
+        Falar no WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var input = document.getElementById("busca-praia");
+      var itens = document.querySelectorAll("#lista-praias li");
+      if (!input) return;
+      input.addEventListener("input", function () {
+        var termo = input.value.trim().toLowerCase();
+        itens.forEach(function (li) {
+          var praia = li.querySelector("a").getAttribute("data-praia") || "";
+          li.hidden = termo.length > 0 && praia.indexOf(termo) === -1;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
