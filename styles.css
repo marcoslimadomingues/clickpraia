@@ -536,10 +536,15 @@ footer p {
 }
 
 /* Tabela de diarias */
+.tabela-diarias-wrap {
+  overflow-x: auto;
+  margin: 8px 0 4px;
+}
+
 .tabela-diarias {
   width: 100%;
+  min-width: 320px;
   border-collapse: collapse;
-  margin: 8px 0 4px;
   font-size: 0.95rem;
 }
 

@@ -149,7 +149,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   const diariaBaixa = fmtBRL(imovel.diaria_baixa);
   const diariaAlta = fmtBRL(imovel.diaria_alta);
   const tabelaDiarias = (diariaBaixa || diariaAlta || imovel.minimo_noites)
-    ? `<table class="tabela-diarias">
+    ? `<div class="tabela-diarias-wrap"><table class="tabela-diarias">
         <caption>Diárias e mínimo de noites</caption>
         <thead><tr><th scope="col">Temporada</th><th scope="col">Valor</th></tr></thead>
         <tbody>
@@ -157,7 +157,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
           <tr><th scope="row">Alta temporada</th><td>${diariaAlta ? diariaAlta + " / noite" : "Consultar no WhatsApp"}</td></tr>
           ${imovel.minimo_noites ? `<tr><th scope="row">Mínimo de noites</th><td>${escHtml(imovel.minimo_noites)}</td></tr>` : ""}
         </tbody>
-      </table>`
+      </table></div>`
     : `<p class="aviso-pendente"><!-- SILUS: substituir antes de publicar - precos --> Valores de diária a confirmar direto no WhatsApp.</p>`;
 
   const pontosProximos = [];
@@ -440,7 +440,7 @@ function paginaHome(imoveis, porPraia) {
           <span class="badge">${escHtml(im.praia)}</span>
         </header>
         <div class="galeria" aria-label="Galeria de fotos">
-          <figure><a href="/${praiaSlug}/${im.slug}/"><img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" loading="lazy" decoding="async"></a></figure>
+          <figure><a href="/${praiaSlug}/${im.slug}/"><img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" width="800" height="600" loading="lazy" decoding="async"></a></figure>
         </div>
         <div class="info">
           <p class="descricao">${escHtml(im.descricao_curta || "Descrição em breve.")}</p>
