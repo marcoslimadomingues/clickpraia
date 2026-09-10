@@ -98,6 +98,7 @@ function gerarFAQ(imovel) {
 }
 
 function paginaImovel(imovel, outrosDaMesmaPraia) {
+  const hoje = new Date().toISOString().slice(0, 10);
   const praiaSlug = slugPraia(imovel.praia);
   const url = `${DOMINIO}/${praiaSlug}/${imovel.slug}/`;
   const tipo = tipoLabel(imovel.tipo);
@@ -200,6 +201,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     name: imovel.nome,
     description: imovel.descricao_longa || imovel.descricao_curta || null,
     url: url,
+    dateModified: hoje,
     telephone: "+55" + (imovel.whatsapp || WHATSAPP_PADRAO).replace(/^55/, ""),
     address: {
       "@type": "PostalAddress",
@@ -262,6 +264,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <meta property="og:description" content="${escHtml(descMeta)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${temFotosReais ? DOMINIO + escHtml(galeriaFotos[0].arquivo) : DOMINIO + "/assets/images/capa-og.jpg"}">
+  <meta property="article:modified_time" content="${hoje}">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -319,6 +322,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>Canoa Quebrada, Aracati - CE</p>
+      <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
@@ -343,6 +347,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
 }
 
 function paginaHub(praia, imoveisDaPraia) {
+  const hoje = new Date().toISOString().slice(0, 10);
   const praiaSlug = slugPraia(praia);
   const url = `${DOMINIO}/${praiaSlug}/`;
   const cards = imoveisDaPraia
@@ -380,6 +385,7 @@ function paginaHub(praia, imoveisDaPraia) {
   <meta property="og:title" content="Aluguel de temporada em ${escHtml(praia)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
+  <meta property="article:modified_time" content="${hoje}">
 </head>
 <body>
   <div class="page">
@@ -410,6 +416,7 @@ function paginaHub(praia, imoveisDaPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p><a href="/">Voltar para a página inicial</a></p>
+      <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
@@ -434,6 +441,7 @@ function paginaHub(praia, imoveisDaPraia) {
 }
 
 function paginaHome(imoveis, porPraia) {
+  const hoje = new Date().toISOString().slice(0, 10);
   const cards = imoveis
     .map((im) => {
       const praiaSlug = slugPraia(im.praia);
@@ -471,6 +479,7 @@ function paginaHome(imoveis, porPraia) {
     url: `${DOMINIO}/`,
     areaServed: "Canoa Quebrada, Aracati - CE",
     knowsLanguage: "pt-BR",
+    dateModified: hoje,
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "reservas",
@@ -510,6 +519,7 @@ function paginaHome(imoveis, porPraia) {
   <meta property="og:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
   <meta property="og:url" content="${DOMINIO}/">
   <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
+  <meta property="article:modified_time" content="${hoje}">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
@@ -549,6 +559,23 @@ function paginaHome(imoveis, porPraia) {
 
       ${hubsLinks ? `<div class="section-intro"><h2>Explore por praia</h2></div><ul class="lista-outros">\n        ${hubsLinks}\n      </ul>` : ""}
 
+      <section class="guia-conteudo" aria-label="Sobre Canoa Quebrada">
+        <h2>Canoa Quebrada fica onde?</h2>
+        <p>Canoa Quebrada é um distrito do município de Aracati, no litoral leste do Ceará, a cerca de 160 km de Fortaleza — geralmente entre 2h e 3h de carro pela CE-040. É conhecida pelas falésias coloridas, pelas dunas e pela rua da Broadway, o centro de bares e restaurantes da vila.</p>
+
+        <h2>Quantos km de Fortaleza até Canoa Quebrada?</h2>
+        <p>A distância aproximada é de 160 km. De carro, o trajeto costuma levar entre 2h e 2h30. De ônibus, saindo do terminal rodoviário de Fortaleza até Aracati, o trajeto dura entre 2h30 e 3h30, mais cerca de 15 a 20 minutos de mototáxi ou táxi até a vila. Veja o guia completo com todas as opções de transporte.</p>
+
+        <h2>O que é a Broadway de Canoa Quebrada?</h2>
+        <p>Broadway é o nome dado à rua principal de bares, restaurantes e música ao vivo de Canoa Quebrada. É onde se concentra a vida noturna da vila, com movimento praticamente todas as noites em alta temporada.</p>
+
+        <h2>Canoa Quebrada é pousada ou aluguel de temporada?</h2>
+        <p>Existem as duas opções na vila. A ClickPraia trabalha com aluguel de temporada — casas e apartamentos completos, reservados direto com o anfitrião pelo WhatsApp, sem taxa de plataforma e sem formulário.</p>
+
+        <h2>Quantos imóveis a ClickPraia tem em Canoa Quebrada?</h2>
+        <p>${imoveis.length} imóve${imoveis.length === 1 ? "l" : "is"} cadastrado${imoveis.length === 1 ? "" : "s"} atualmente, todos em Canoa Quebrada, Aracati/CE.</p>
+      </section>
+
       <div class="section-intro">
         <h2>Guias de Canoa Quebrada</h2>
       </div>
@@ -564,6 +591,7 @@ function paginaHome(imoveis, porPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>Canoa Quebrada, Aracati - CE</p>
+      <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
@@ -595,6 +623,7 @@ function paginaHome(imoveis, porPraia) {
 }
 
 function paginaGuia(guia, imoveisDestaque) {
+  const hoje = new Date().toISOString().slice(0, 10);
   const url = `${DOMINIO}/guias/${guia.slug}/`;
   const corpoHtml = guia.corpo
     .map((bloco) => {
@@ -621,6 +650,7 @@ function paginaGuia(guia, imoveisDestaque) {
             description: guia.descricao,
             url: url,
             inLanguage: "pt-BR",
+            dateModified: hoje,
             publisher: { "@id": `${DOMINIO}/#negocio` }
           },
           {
@@ -661,6 +691,7 @@ function paginaGuia(guia, imoveisDestaque) {
   <meta property="og:description" content="${escHtml(guia.descricao)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
+  <meta property="article:modified_time" content="${hoje}">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -697,6 +728,7 @@ function paginaGuia(guia, imoveisDestaque) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p><a href="/">Voltar para a página inicial</a></p>
+      <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
