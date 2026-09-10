@@ -569,21 +569,31 @@ function paginaHome(imoveis, porPraia) {
 
       ${hubsLinks ? `<div class="section-intro"><h2>Explore por praia</h2></div><ul class="lista-outros">\n        ${hubsLinks}\n      </ul>` : ""}
 
-      <section class="guia-conteudo" aria-label="Sobre Canoa Quebrada">
-        <h2>Canoa Quebrada fica onde?</h2>
-        <p>Canoa Quebrada é um distrito do município de Aracati, no litoral leste do Ceará, a cerca de 160 km de Fortaleza — geralmente entre 2h e 3h de carro pela CE-040. É conhecida pelas falésias coloridas, pelas dunas e pela rua da Broadway, o centro de bares e restaurantes da vila.</p>
+      <section class="guia-conteudo sobre-canoa" aria-label="Sobre Canoa Quebrada">
+        <details>
+          <summary><h2>Canoa Quebrada fica onde?</h2></summary>
+          <p>Canoa Quebrada é um distrito do município de Aracati, no litoral leste do Ceará, a cerca de 160 km de Fortaleza — geralmente entre 2h e 3h de carro pela CE-040. É conhecida pelas falésias coloridas, pelas dunas e pela rua da Broadway, o centro de bares e restaurantes da vila.</p>
+        </details>
 
-        <h2>Quantos km de Fortaleza até Canoa Quebrada?</h2>
-        <p>A distância aproximada é de 160 km. De carro, o trajeto costuma levar entre 2h e 2h30. De ônibus, saindo do terminal rodoviário de Fortaleza até Aracati, o trajeto dura entre 2h30 e 3h30, mais cerca de 15 a 20 minutos de mototáxi ou táxi até a vila. Veja o guia completo com todas as opções de transporte.</p>
+        <details>
+          <summary><h2>Quantos km de Fortaleza até Canoa Quebrada?</h2></summary>
+          <p>A distância aproximada é de 160 km. De carro, o trajeto costuma levar entre 2h e 2h30. De ônibus, saindo do terminal rodoviário de Fortaleza até Aracati, o trajeto dura entre 2h30 e 3h30, mais cerca de 15 a 20 minutos de mototáxi ou táxi até a vila. Veja o guia completo com todas as opções de transporte.</p>
+        </details>
 
-        <h2>O que é a Broadway de Canoa Quebrada?</h2>
-        <p>Broadway é o nome dado à rua principal de bares, restaurantes e música ao vivo de Canoa Quebrada. É onde se concentra a vida noturna da vila, com movimento praticamente todas as noites em alta temporada.</p>
+        <details>
+          <summary><h2>O que é a Broadway de Canoa Quebrada?</h2></summary>
+          <p>Broadway é o nome dado à rua principal de bares, restaurantes e música ao vivo de Canoa Quebrada. É onde se concentra a vida noturna da vila, com movimento praticamente todas as noites em alta temporada.</p>
+        </details>
 
-        <h2>Canoa Quebrada é pousada ou aluguel de temporada?</h2>
-        <p>Existem as duas opções na vila. A ClickPraia trabalha com aluguel de temporada — casas e apartamentos completos, reservados direto com o anfitrião pelo WhatsApp, sem taxa de plataforma e sem formulário.</p>
+        <details>
+          <summary><h2>Canoa Quebrada é pousada ou aluguel de temporada?</h2></summary>
+          <p>Existem as duas opções na vila. A ClickPraia trabalha com aluguel de temporada — casas e apartamentos completos, reservados direto com o anfitrião pelo WhatsApp, sem taxa de plataforma e sem formulário.</p>
+        </details>
 
-        <h2>Quantos imóveis a ClickPraia tem em Canoa Quebrada?</h2>
-        <p>${imoveis.length} imóve${imoveis.length === 1 ? "l" : "is"} cadastrado${imoveis.length === 1 ? "" : "s"} atualmente, todos em Canoa Quebrada, Aracati/CE.</p>
+        <details>
+          <summary><h2>Quantos imóveis a ClickPraia tem em Canoa Quebrada?</h2></summary>
+          <p>${imoveis.length} imóve${imoveis.length === 1 ? "l" : "is"} cadastrado${imoveis.length === 1 ? "" : "s"} atualmente, todos em Canoa Quebrada, Aracati/CE.</p>
+        </details>
       </section>
 
       <div class="section-intro">
