@@ -252,7 +252,8 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
 
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
@@ -260,6 +261,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <meta property="og:title" content="${escHtml(h1)}">
   <meta property="og:description" content="${escHtml(descMeta)}">
   <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${temFotosReais ? DOMINIO + escHtml(galeriaFotos[0].arquivo) : DOMINIO + "/assets/images/capa-og.jpg"}">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -267,6 +269,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <div class="page">
     <header class="site-header">
       <div class="brand-row">
+        <a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a>
         <p class="brand">clickpraia.com.br</p>
       </div>
     </header>
@@ -369,17 +372,19 @@ function paginaHub(praia, imoveisDaPraia) {
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
 
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ClickPraia">
   <meta property="og:title" content="Aluguel de temporada em ${escHtml(praia)}">
   <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
 </head>
 <body>
   <div class="page">
     <header class="site-header">
-      <div class="brand-row"><p class="brand">clickpraia.com.br</p></div>
+      <div class="brand-row"><a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
       <div class="hero">
         <h1>Aluguel de temporada em ${escHtml(praia)}</h1>
         <p class="subtitle">Casas e imóveis selecionados em ${escHtml(praia)}, Aracati/CE. Fale direto no WhatsApp.</p>
@@ -495,7 +500,8 @@ function paginaHome(imoveis, porPraia) {
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
 
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
@@ -503,11 +509,12 @@ function paginaHome(imoveis, porPraia) {
   <meta property="og:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
   <meta property="og:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
   <meta property="og:url" content="${DOMINIO}/">
-  <!-- SILUS: substituir antes de publicar - og:image/twitter:image ficam de fora ate existir foto de capa real -->
+  <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
 
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
   <meta name="twitter:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
+  <meta name="twitter:image" content="${DOMINIO}/assets/images/capa-og.jpg">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -517,6 +524,7 @@ function paginaHome(imoveis, porPraia) {
   <div class="page">
     <header class="site-header">
       <div class="brand-row">
+        <a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a>
         <p class="brand">clickpraia.com.br</p>
       </div>
       <div class="hero">
@@ -644,20 +652,22 @@ function paginaGuia(guia, imoveisDestaque) {
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
 
   <link rel="stylesheet" href="/styles.css">
-  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/images/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="ClickPraia">
   <meta property="og:title" content="${escHtml(guia.titulo)}">
   <meta property="og:description" content="${escHtml(guia.descricao)}">
   <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
   <div class="page">
     <header class="site-header">
-      <div class="brand-row"><p class="brand">clickpraia.com.br</p></div>
+      <div class="brand-row"><a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
     </header>
 
     <nav class="breadcrumb" aria-label="Trilha de navegação">
