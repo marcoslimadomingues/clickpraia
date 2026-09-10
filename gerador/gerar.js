@@ -15,6 +15,8 @@ const path = require("path");
 const RAIZ = path.join(__dirname, "..");
 const DOMINIO = "https://clickpraia.com.br";
 const WHATSAPP_PADRAO = "558599428060";
+const CNPJ = "42.451.913/0001-74";
+const REDES_SOCIAIS = ["https://www.instagram.com/clickpraia", "https://www.facebook.com/clickpraia"];
 
 function slugPraia(praia) {
   return String(praia || "")
@@ -228,7 +230,9 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
             "@id": `${DOMINIO}/#negocio`,
             name: "ClickPraia",
             url: `${DOMINIO}/`,
-            areaServed: "Canoa Quebrada, Aracati - CE"
+            areaServed: "Canoa Quebrada, Aracati - CE",
+            taxID: CNPJ,
+            sameAs: REDES_SOCIAIS
           },
           breadcrumbJsonLd,
           faqJsonLd
@@ -322,6 +326,8 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>Canoa Quebrada, Aracati - CE</p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
@@ -416,6 +422,8 @@ function paginaHub(praia, imoveisDaPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p><a href="/">Voltar para a página inicial</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
@@ -480,6 +488,8 @@ function paginaHome(imoveis, porPraia) {
     areaServed: "Canoa Quebrada, Aracati - CE",
     knowsLanguage: "pt-BR",
     dateModified: hoje,
+    taxID: CNPJ,
+    sameAs: REDES_SOCIAIS,
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "reservas",
@@ -591,6 +601,8 @@ function paginaHome(imoveis, porPraia) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>Canoa Quebrada, Aracati - CE</p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
@@ -728,6 +740,8 @@ function paginaGuia(guia, imoveisDestaque) {
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p><a href="/">Voltar para a página inicial</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
