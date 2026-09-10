@@ -249,6 +249,8 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <link rel="canonical" href="${url}">
   <link rel="preconnect" href="https://wa.me">
 
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
   <link rel="stylesheet" href="/styles.css">
   <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
 
@@ -322,6 +324,15 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
       </a>
     </div>
   </div>
+
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
 </body>
 </html>
 `;
@@ -354,6 +365,9 @@ function paginaHub(praia, imoveisDaPraia) {
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0a5c8a">
   <link rel="canonical" href="${url}">
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
   <link rel="stylesheet" href="/styles.css">
   <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
 
@@ -399,10 +413,299 @@ function paginaHub(praia, imoveisDaPraia) {
   </div>
 
   <script src="/hub-filtro.js"></script>
+
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
 </body>
 </html>
 `;
   return { html, url, praiaSlug };
+}
+
+function paginaHome(imoveis, porPraia) {
+  const cards = imoveis
+    .map((im) => {
+      const praiaSlug = slugPraia(im.praia);
+      const foto = im.fotos && im.fotos[0] ? im.fotos[0] : null;
+      const waHref = waLink(im.whatsapp || WHATSAPP_PADRAO, `Ola! Tenho interesse no imovel: ${im.nome} (${im.praia}).`);
+      return `<article class="card" id="${escHtml(im.slug)}">
+        <header class="card-header">
+          <h3><a href="/${praiaSlug}/${im.slug}/">${escHtml(im.nome)}</a></h3>
+          <span class="badge">${escHtml(im.praia)}</span>
+        </header>
+        <div class="galeria" aria-label="Galeria de fotos">
+          <figure><a href="/${praiaSlug}/${im.slug}/"><img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" loading="lazy" decoding="async"></a></figure>
+        </div>
+        <div class="info">
+          <p class="descricao">${escHtml(im.descricao_curta || "Descrição em breve.")}</p>
+          <div class="cta-group">
+            <a class="cta secondary" href="/${praiaSlug}/${im.slug}/">Ver detalhes</a>
+            <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join("\n      ");
+
+  const hubsLinks = Object.keys(porPraia)
+    .filter((ps) => porPraia[ps].itens.length >= 2)
+    .map((ps) => `<li><a href="/${ps}/">Imóveis em ${escHtml(porPraia[ps].praia)}</a></li>`)
+    .join("\n        ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LodgingBusiness",
+    "@id": `${DOMINIO}/#negocio`,
+    name: "ClickPraia",
+    url: `${DOMINIO}/`,
+    areaServed: "Canoa Quebrada, Aracati - CE",
+    knowsLanguage: "pt-BR",
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "reservas",
+      availableLanguage: ["Portuguese"],
+      telephone: "+55" + WHATSAPP_PADRAO.replace(/^55/, "")
+    }
+  };
+
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE</title>
+  <meta name="description" content="Casas e imóveis para aluguel de temporada em Canoa Quebrada, Aracati/CE. Preços e disponibilidade direto no WhatsApp.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0a5c8a">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="canonical" href="${DOMINIO}/">
+  <link rel="preconnect" href="https://wa.me">
+
+  <!-- SILUS: substituir antes de publicar - token de verificacao do Search Console -->
+  <meta name="google-site-verification" content="{{GSC_TOKEN}}">
+
+  <!-- CSP via meta: GitHub Pages nao permite header HTTP customizado.
+       Nao cobre frame-ancestors (so funciona como header real). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="ClickPraia">
+  <meta property="og:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
+  <meta property="og:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
+  <meta property="og:url" content="${DOMINIO}/">
+  <!-- SILUS: substituir antes de publicar - og:image/twitter:image ficam de fora ate existir foto de capa real -->
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
+  <meta name="twitter:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
+
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body>
+  <a class="skip-link" href="#lista-imoveis">Pular para lista de imóveis</a>
+
+  <div class="page">
+    <header class="site-header">
+      <div class="brand-row">
+        <p class="brand">clickpraia.com.br</p>
+      </div>
+      <div class="hero">
+        <h1>Aluguel de temporada em Canoa Quebrada</h1>
+        <p class="subtitle">Escolha seu imóvel, veja fotos e informações completas, e reserve direto no WhatsApp.</p>
+      </div>
+      <ul class="trust-row">
+        <li>Resposta rápida no WhatsApp</li>
+        <li>Preços e regras claros</li>
+        <li>${imoveis.length} imóve${imoveis.length === 1 ? "l" : "is"} cadastrados</li>
+      </ul>
+    </header>
+
+    <main id="conteudo">
+      <div class="section-intro">
+        <h2>Imóveis em Canoa Quebrada</h2>
+        <p>Casas e apartamentos com contato direto para reserva.</p>
+      </div>
+      <section id="lista-imoveis" aria-label="Lista de imóveis">
+      ${cards}
+      </section>
+
+      ${hubsLinks ? `<div class="section-intro"><h2>Explore por praia</h2></div><ul class="lista-outros">\n        ${hubsLinks}\n      </ul>` : ""}
+
+      <div class="section-intro">
+        <h2>Guias de Canoa Quebrada</h2>
+      </div>
+      <ul class="lista-outros">
+        <li><a href="/guias/como-ir-de-fortaleza-a-canoa-quebrada/">Como ir de Fortaleza a Canoa Quebrada</a></li>
+        <li><a href="/guias/o-que-fazer-em-canoa-quebrada-em-3-dias/">O que fazer em Canoa Quebrada em 3 dias</a></li>
+        <li><a href="/guias/reveillon-e-carnaval-em-canoa-quebrada/">Réveillon e Carnaval em Canoa Quebrada</a></li>
+        <li><a href="/guias/canoa-quebrada-com-criancas/">Canoa Quebrada com crianças</a></li>
+        <li><a href="/guias/onde-ficar-em-canoa-quebrada/">Onde ficar em Canoa Quebrada</a></li>
+      </ul>
+    </main>
+
+    <footer>
+      <p>ClickPraia | Atendimento direto por WhatsApp</p>
+      <p>Canoa Quebrada, Aracati - CE</p>
+    </footer>
+
+    <div class="sticky-cta">
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis do ClickPraia.")}" target="_blank" rel="noopener noreferrer">
+        Falar no WhatsApp
+      </a>
+    </div>
+
+    <noscript>
+      <section class="noscript-box">
+        <h2>Conteúdo disponível sem JavaScript</h2>
+        <p>Esta página funciona mesmo sem JavaScript ativado.</p>
+      </section>
+    </noscript>
+  </div>
+
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
+</body>
+</html>
+`;
+  return html;
+}
+
+function paginaGuia(guia, imoveisDestaque) {
+  const url = `${DOMINIO}/guias/${guia.slug}/`;
+  const corpoHtml = guia.corpo
+    .map((bloco) => {
+      if (bloco.tipo === "h2") return `<h2>${escHtml(bloco.texto)}</h2>`;
+      if (bloco.tipo === "ul") return `<ul>${bloco.itens.map((i) => `<li>${escHtml(i)}</li>`).join("")}</ul>`;
+      return `<p>${bloco.texto.replace(/&/g, "&amp;").replace(/<(?!\/?(?:!--| SILUS))/g, "&lt;")}</p>`;
+    })
+    .join("\n      ");
+
+  const blocoImoveis = imoveisDestaque
+    .slice(0, 3)
+    .map((im) => `<li><a href="/${slugPraia(im.praia)}/${im.slug}/">${escHtml(im.nome)}</a> — ${escHtml(im.praia)}</li>`)
+    .join("\n        ");
+
+  const jsonLd = JSON.parse(
+    JSON.stringify(
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Article",
+            "@id": `${url}#artigo`,
+            headline: guia.titulo,
+            description: guia.descricao,
+            url: url,
+            inLanguage: "pt-BR",
+            publisher: { "@id": `${DOMINIO}/#negocio` }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${url}#breadcrumb`,
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "ClickPraia", item: `${DOMINIO}/` },
+              { "@type": "ListItem", position: 2, name: "Guias", item: `${DOMINIO}/guias/` },
+              { "@type": "ListItem", position: 3, name: guia.titulo, item: url }
+            ]
+          }
+        ]
+      },
+      (k, v) => (v === null ? undefined : v)
+    )
+  );
+
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${escHtml(guia.titulo)} | ClickPraia</title>
+  <meta name="description" content="${escHtml(guia.descricao)}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0a5c8a">
+  <link rel="canonical" href="${url}">
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ClickPraia">
+  <meta property="og:title" content="${escHtml(guia.titulo)}">
+  <meta property="og:description" content="${escHtml(guia.descricao)}">
+  <meta property="og:url" content="${url}">
+
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="brand-row"><p class="brand">clickpraia.com.br</p></div>
+    </header>
+
+    <nav class="breadcrumb" aria-label="Trilha de navegação">
+      <ol>
+        <li><a href="/">ClickPraia</a></li>
+        <li><a href="/guias/">Guias</a></li>
+        <li aria-current="page">${escHtml(guia.titulo)}</li>
+      </ol>
+    </nav>
+
+    <main class="guia-conteudo">
+      <h1>${escHtml(guia.titulo)}</h1>
+      ${corpoHtml}
+
+      <div class="bloco-imoveis-guia">
+        <h2>Imóveis em Canoa Quebrada</h2>
+        <ul class="lista-outros">
+        ${blocoImoveis}
+        </ul>
+      </div>
+
+      <div class="cta-group">
+        <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+      </div>
+    </main>
+
+    <footer>
+      <p>ClickPraia | Atendimento direto por WhatsApp</p>
+      <p><a href="/">Voltar para a página inicial</a></p>
+    </footer>
+
+    <div class="sticky-cta">
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
+</body>
+</html>
+`;
+  return { html, url };
 }
 
 function main() {
@@ -439,6 +742,19 @@ function main() {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
     urlsGeradas.push({ url, prioridade: "0.9" });
+    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
+  });
+
+  fs.writeFileSync(path.join(RAIZ, "index.html"), paginaHome(imoveis, porPraia), "utf8");
+  console.log("gerado: index.html");
+
+  const guias = require(path.join(RAIZ, "dados", "guias.js"));
+  guias.forEach((guia) => {
+    const { html, url } = paginaGuia(guia, imoveis);
+    const dir = path.join(RAIZ, "guias", guia.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+    urlsGeradas.push({ url, prioridade: "0.6" });
     console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
   });
 
