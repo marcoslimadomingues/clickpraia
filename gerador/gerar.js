@@ -1,0 +1,450 @@
+#!/usr/bin/env node
+"use strict";
+/*
+ * Gerador estatico ClickPraia (Silus).
+ * Le dados/imoveis.json, gera:
+ *   - /<praia-slug>/<slug>/index.html      (uma pagina por imovel)
+ *   - /<praia-slug>/index.html             (hub por praia, 2+ imoveis)
+ *   - sitemap.xml (home + hubs + imoveis + guias fixos)
+ * Sem dependencias externas. Rodar: node gerador/gerar.js
+ */
+
+const fs = require("fs");
+const path = require("path");
+
+const RAIZ = path.join(__dirname, "..");
+const DOMINIO = "https://clickpraia.com.br";
+const WHATSAPP_PADRAO = "558599428060";
+
+function slugPraia(praia) {
+  return String(praia || "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function escHtml(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function fmtBRL(valor) {
+  if (valor == null) return null;
+  return "R$ " + Number(valor).toLocaleString("pt-BR", { minimumFractionDigits: 0 });
+}
+
+function fmtDist(metros) {
+  if (metros == null) return null;
+  return metros >= 1000 ? (metros / 1000).toFixed(1).replace(".0", "") + " km" : metros + " m";
+}
+
+function waLink(numero, texto) {
+  const tel = String(numero || WHATSAPP_PADRAO).replace(/\D/g, "");
+  return "https://wa.me/" + tel + "?text=" + encodeURIComponent(texto);
+}
+
+function campoFicha(label, valor) {
+  if (valor == null || valor === "") return "";
+  return `<li><strong>${escHtml(label)}</strong><span>${escHtml(valor)}</span></li>`;
+}
+
+function tipoLabel(tipo) {
+  const map = { casa: "Casa", apartamento: "Apartamento", chale: "Chalé", "chalé": "Chalé" };
+  return map[tipo] || (tipo ? tipo.charAt(0).toUpperCase() + tipo.slice(1) : "Imóvel");
+}
+
+function gerarFAQ(imovel) {
+  const perguntas = [
+    {
+      q: `Como funciona o pagamento da ${imovel.nome}?`,
+      a: "Reserva combinada direto com o anfitriao pelo WhatsApp. Peca a forma de pagamento e as condicoes na conversa antes de confirmar a data."
+    },
+    {
+      q: "Qual o horario de check-in e check-out?",
+      a: "Horarios de entrada e saida sao confirmados na reserva pelo WhatsApp, pois podem variar conforme a temporada."
+    },
+    {
+      q: imovel.aceita_pet == null ? "O imovel aceita animais de estimacao?" : `A ${imovel.nome} aceita pet?`,
+      a: imovel.aceita_pet === true
+        ? "Sim, este imovel aceita pet. Confirme regras e taxas eventuais direto no WhatsApp."
+        : imovel.aceita_pet === false
+        ? "Este imovel nao aceita pet."
+        : "Confirme a politica de pets direto no WhatsApp antes de reservar."
+    },
+    {
+      q: "Tem vaga de estacionamento?",
+      a: imovel.vagas_garagem
+        ? `Sim, ${imovel.vagas_garagem} vaga(s) de garagem inclusas.`
+        : "Confirme a disponibilidade de vaga de garagem direto no WhatsApp."
+    },
+    {
+      q: "Como chegar a Canoa Quebrada saindo de Fortaleza?",
+      a: "Canoa Quebrada fica a cerca de 160 km de Fortaleza, geralmente entre 2h e 3h de carro pela CE-040, ou por onibus/transfer com saida de Fortaleza. Veja o guia \"Como ir de Fortaleza a Canoa Quebrada\" para detalhes."
+    },
+    {
+      q: `Qual a distancia da ${imovel.nome} até a praia?`,
+      a: imovel.distancia_praia_metros != null
+        ? `Fica a aproximadamente ${fmtDist(imovel.distancia_praia_metros)} da praia, a pe.`
+        : "Confirme a distancia exata direto no WhatsApp."
+    }
+  ];
+  return perguntas;
+}
+
+function paginaImovel(imovel, outrosDaMesmaPraia) {
+  const praiaSlug = slugPraia(imovel.praia);
+  const url = `${DOMINIO}/${praiaSlug}/${imovel.slug}/`;
+  const tipo = tipoLabel(imovel.tipo);
+  const capacidadeTxt = imovel.capacidade ? `para ${imovel.capacidade} pessoas` : "";
+  const distanciaTxt = imovel.distancia_praia_metros != null ? `${fmtDist(imovel.distancia_praia_metros)} da praia` : "";
+  const tituloPartes = [`${tipo}${imovel.tem_piscina ? " com piscina" : ""} em ${imovel.praia}`, capacidadeTxt, imovel.quartos ? `${imovel.quartos} quartos` : "", distanciaTxt]
+    .filter(Boolean);
+  const titulo = tituloPartes.join(" — ").replace(" — " + capacidadeTxt, capacidadeTxt ? ` para ${imovel.capacidade} pessoas` : "");
+  const h1 = `${tipo}${imovel.tem_piscina ? " com piscina" : ""} em ${imovel.praia}${capacidadeTxt ? " para " + imovel.capacidade + " pessoas" : ""}${imovel.quartos ? " — " + imovel.quartos + " quartos" : ""}${distanciaTxt ? ", " + distanciaTxt : ""}`;
+  const descMeta = imovel.descricao_curta || `${tipo} em ${imovel.praia}, Aracati/CE. Fale direto no WhatsApp para disponibilidade e valores.`;
+  const waMsg = `Ola! Tenho interesse no imovel: ${imovel.nome} (${imovel.praia}).`;
+  const waHref = waLink(imovel.whatsapp || WHATSAPP_PADRAO, waMsg);
+  const faq = gerarFAQ(imovel);
+
+  const fichaItens = [
+    campoFicha("Capacidade", imovel.capacidade ? `${imovel.capacidade} pessoas` : null),
+    campoFicha("Quartos", imovel.quartos),
+    campoFicha("Camas", imovel.camas),
+    campoFicha("Banheiros", imovel.banheiros),
+    campoFicha("Vagas de garagem", imovel.vagas_garagem),
+    campoFicha("Distância da praia", fmtDist(imovel.distancia_praia_metros)),
+    campoFicha("Distância da Broadway", fmtDist(imovel.distancia_broadway_metros))
+  ].filter(Boolean).join("\n        ");
+
+  const comodidades = [
+    imovel.tem_piscina === true ? "Piscina" : null,
+    imovel.aceita_pet === true ? "Aceita pet" : null,
+    imovel.tem_ar === true ? "Ar-condicionado" : null,
+    imovel.tem_wifi === true ? "Wi-Fi" : null,
+    imovel.tem_churrasqueira === true ? "Churrasqueira" : null,
+    imovel.tem_gerador === true ? "Gerador" : null
+  ].filter(Boolean);
+
+  const galeriaFotos = (imovel.fotos && imovel.fotos.length ? imovel.fotos : []).slice(0, 12);
+  const temFotosReais = galeriaFotos.length > 0;
+  const galeriaHtml = temFotosReais
+    ? galeriaFotos
+        .map((f, i) => {
+          const eager = i === 0;
+          return `<figure><picture>
+          <source srcset="${escHtml(f.arquivo_webp || f.arquivo)}" type="image/webp">
+          <img src="${escHtml(f.arquivo)}" alt="${escHtml(f.alt)}" width="800" height="600" loading="${eager ? "eager" : "lazy"}" fetchpriority="${eager ? "high" : "low"}" decoding="async" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
+        </picture></figure>`;
+        })
+        .join("\n        ")
+    : `<figure><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de ${escHtml(imovel.nome)}" width="800" height="600" loading="eager"></figure>
+        <!-- SILUS: substituir antes de publicar - fotos reais do imovel -->`;
+
+  const diariaBaixa = fmtBRL(imovel.diaria_baixa);
+  const diariaAlta = fmtBRL(imovel.diaria_alta);
+  const tabelaDiarias = (diariaBaixa || diariaAlta || imovel.minimo_noites)
+    ? `<table class="tabela-diarias">
+        <caption>Diárias e mínimo de noites</caption>
+        <thead><tr><th scope="col">Temporada</th><th scope="col">Valor</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Baixa temporada</th><td>${diariaBaixa ? diariaBaixa + " / noite" : "Consultar no WhatsApp"}</td></tr>
+          <tr><th scope="row">Alta temporada</th><td>${diariaAlta ? diariaAlta + " / noite" : "Consultar no WhatsApp"}</td></tr>
+          ${imovel.minimo_noites ? `<tr><th scope="row">Mínimo de noites</th><td>${escHtml(imovel.minimo_noites)}</td></tr>` : ""}
+        </tbody>
+      </table>`
+    : `<p class="aviso-pendente"><!-- SILUS: substituir antes de publicar - precos --> Valores de diária a confirmar direto no WhatsApp.</p>`;
+
+  const pontosProximos = [];
+  if (imovel.distancia_praia_metros != null) pontosProximos.push(`Praia de ${imovel.praia}: ${fmtDist(imovel.distancia_praia_metros)}`);
+  if (imovel.distancia_broadway_metros != null) pontosProximos.push(`Broadway (rua principal de Canoa Quebrada): ${fmtDist(imovel.distancia_broadway_metros)}`);
+  const blocoProximo = pontosProximos.length
+    ? `<ul class="lista-proximo">${pontosProximos.map((p) => `<li>${escHtml(p)}</li>`).join("")}</ul>`
+    : `<p class="aviso-pendente"><!-- SILUS: substituir antes de publicar - pontos de referencia --> Distâncias a pé de mercado, farmácia e praia ainda não cadastradas.</p>`;
+
+  const outrosHtml = outrosDaMesmaPraia
+    .slice(0, 3)
+    .map(
+      (o) => `<li><a href="/${slugPraia(o.praia)}/${o.slug}/">${escHtml(o.nome)}</a></li>`
+    )
+    .join("\n        ");
+
+  const breadcrumbJsonLd = {
+    "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "ClickPraia", item: `${DOMINIO}/` },
+      { "@type": "ListItem", position: 2, name: imovel.praia, item: `${DOMINIO}/${praiaSlug}/` },
+      { "@type": "ListItem", position: 3, name: imovel.nome, item: url }
+    ]
+  };
+
+  const faqJsonLd = {
+    "@type": "FAQPage",
+    "@id": `${url}#faq`,
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a }
+    }))
+  };
+
+  const vacationRentalJsonLd = {
+    "@type": "VacationRental",
+    "@id": `${url}#imovel`,
+    name: imovel.nome,
+    description: imovel.descricao_longa || imovel.descricao_curta || null,
+    url: url,
+    telephone: "+55" + (imovel.whatsapp || WHATSAPP_PADRAO).replace(/^55/, ""),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: imovel.cidade || "Aracati",
+      addressRegion: "CE",
+      addressCountry: "BR"
+    },
+    geo: imovel.lat != null && imovel.lng != null ? { "@type": "GeoCoordinates", latitude: imovel.lat, longitude: imovel.lng } : undefined,
+    numberOfRooms: imovel.quartos || undefined,
+    petsAllowed: imovel.aceita_pet == null ? undefined : imovel.aceita_pet,
+    amenityFeature: comodidades.length ? comodidades.map((c) => ({ "@type": "LocationFeatureSpecification", name: c, value: true })) : undefined,
+    image: temFotosReais ? galeriaFotos.map((f) => `${DOMINIO}${f.arquivo}`) : undefined,
+    isPartOf: { "@id": `${DOMINIO}/#negocio` }
+  };
+
+  const jsonLd = JSON.parse(
+    JSON.stringify(
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          vacationRentalJsonLd,
+          {
+            "@type": "LodgingBusiness",
+            "@id": `${DOMINIO}/#negocio`,
+            name: "ClickPraia",
+            url: `${DOMINIO}/`,
+            areaServed: "Canoa Quebrada, Aracati - CE"
+          },
+          breadcrumbJsonLd,
+          faqJsonLd
+        ]
+      },
+      (k, v) => (v === null ? undefined : v)
+    )
+  );
+
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${escHtml(h1)} | ClickPraia</title>
+  <meta name="description" content="${escHtml(descMeta)}">
+  <meta name="robots" content="${imovel.ativo ? "index, follow, max-image-preview:large" : "noindex, follow"}">
+  <meta name="theme-color" content="#0a5c8a">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="canonical" href="${url}">
+  <link rel="preconnect" href="https://wa.me">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="ClickPraia">
+  <meta property="og:title" content="${escHtml(h1)}">
+  <meta property="og:description" content="${escHtml(descMeta)}">
+  <meta property="og:url" content="${url}">
+
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="brand-row">
+        <p class="brand">clickpraia.com.br</p>
+      </div>
+    </header>
+
+    <nav class="breadcrumb" aria-label="Trilha de navegação">
+      <ol>
+        <li><a href="/">ClickPraia</a></li>
+        <li><a href="/${praiaSlug}/">${escHtml(imovel.praia)}</a></li>
+        <li aria-current="page">${escHtml(imovel.nome)}</li>
+      </ol>
+    </nav>
+
+    <main class="detail-page">
+      <div class="detail-galeria" aria-label="Galeria de fotos">
+        ${galeriaHtml}
+      </div>
+
+      <span class="badge">${escHtml(imovel.praia)}</span>
+      <h1>${escHtml(h1)}</h1>
+      <p class="descricao">${escHtml(imovel.descricao_curta || "Descrição completa em breve.")}</p>
+
+      <h2>Ficha técnica</h2>
+      <ul class="lista">
+        ${fichaItens || "<li><!-- SILUS: substituir antes de publicar - dados do imovel --></li>"}
+      </ul>
+
+      ${comodidades.length ? `<h2>Comodidades</h2><ul class="lista-comodidades">${comodidades.map((c) => `<li>${escHtml(c)}</li>`).join("")}</ul>` : ""}
+
+      <h2>Diárias</h2>
+      ${tabelaDiarias}
+
+      <h2>O que tem perto</h2>
+      ${blocoProximo}
+
+      <h2>Perguntas frequentes</h2>
+      <div class="faq">
+        ${faq.map((f) => `<details><summary>${escHtml(f.q)}</summary><p>${escHtml(f.a)}</p></details>`).join("\n        ")}
+      </div>
+
+      ${outrosHtml ? `<h2>Outros imóveis em ${escHtml(imovel.praia)}</h2><ul class="lista-outros">${outrosHtml}</ul>` : ""}
+
+      <div class="cta-group">
+        <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+      </div>
+    </main>
+
+    <footer>
+      <p>ClickPraia | Atendimento direto por WhatsApp</p>
+      <p>Canoa Quebrada, Aracati - CE</p>
+    </footer>
+
+    <div class="sticky-cta">
+      <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">
+        Falar no WhatsApp sobre ${escHtml(imovel.nome)}
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+`;
+  return { html, url, praiaSlug };
+}
+
+function paginaHub(praia, imoveisDaPraia) {
+  const praiaSlug = slugPraia(praia);
+  const url = `${DOMINIO}/${praiaSlug}/`;
+  const cards = imoveisDaPraia
+    .map((im) => {
+      const foto = im.fotos && im.fotos[0] ? im.fotos[0] : null;
+      return `<article class="card-hub" data-capacidade="${im.capacidade || 0}" data-piscina="${im.tem_piscina ? 1 : 0}" data-preco="${im.diaria_baixa || 0}">
+        <a href="/${praiaSlug}/${im.slug}/">
+          <img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" width="400" height="300" loading="lazy">
+          <h3>${escHtml(im.nome)}</h3>
+        </a>
+        <p>${escHtml(im.descricao_curta || "Descrição em breve.")}</p>
+      </article>`;
+    })
+    .join("\n      ");
+
+  const html = `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Aluguel de temporada em ${escHtml(praia)} | ClickPraia</title>
+  <meta name="description" content="Casas e imóveis para alugar em ${escHtml(praia)}, Aracati/CE. Fotos, preços e reserva direto no WhatsApp.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0a5c8a">
+  <link rel="canonical" href="${url}">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ClickPraia">
+  <meta property="og:title" content="Aluguel de temporada em ${escHtml(praia)}">
+  <meta property="og:url" content="${url}">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <div class="brand-row"><p class="brand">clickpraia.com.br</p></div>
+      <div class="hero">
+        <h1>Aluguel de temporada em ${escHtml(praia)}</h1>
+        <p class="subtitle">Casas e imóveis selecionados em ${escHtml(praia)}, Aracati/CE. Fale direto no WhatsApp.</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="section-intro">
+        <p>${escHtml(praia)} é um dos destinos mais procurados do litoral do Ceará, conhecido pelas falésias, dunas e pela vida noturna da Broadway. Veja abaixo os imóveis disponíveis para sua temporada.</p>
+      </div>
+
+      <div class="filtros" aria-label="Filtrar imóveis">
+        <label>Capacidade mínima <input type="number" id="filtro-capacidade" min="0" value="0"></label>
+        <label><input type="checkbox" id="filtro-piscina"> Só com piscina</label>
+        <label>Preço máximo (diária) <input type="number" id="filtro-preco" min="0" placeholder="Sem limite"></label>
+      </div>
+
+      <section id="lista-hub" aria-label="Imóveis em ${escHtml(praia)}">
+        ${cards}
+      </section>
+    </main>
+
+    <footer>
+      <p>ClickPraia | Atendimento direto por WhatsApp</p>
+      <p><a href="/">Voltar para a página inicial</a></p>
+    </footer>
+
+    <div class="sticky-cta">
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis em " + praia + ".")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+    </div>
+  </div>
+
+  <script src="/hub-filtro.js"></script>
+</body>
+</html>
+`;
+  return { html, url, praiaSlug };
+}
+
+function main() {
+  const dados = JSON.parse(fs.readFileSync(path.join(RAIZ, "dados", "imoveis.json"), "utf8"));
+  const imoveis = dados.imoveis;
+
+  const porPraia = {};
+  imoveis.forEach((im) => {
+    const ps = slugPraia(im.praia);
+    porPraia[ps] = porPraia[ps] || { praia: im.praia, itens: [] };
+    porPraia[ps].itens.push(im);
+  });
+
+  const urlsGeradas = [];
+
+  imoveis.forEach((im) => {
+    const outros = porPraia[slugPraia(im.praia)].itens.filter((o) => o.slug !== im.slug);
+    const { html, url, praiaSlug } = paginaImovel(im, outros);
+    const dir = path.join(RAIZ, praiaSlug, im.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+    urlsGeradas.push({ url, prioridade: "0.8" });
+    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
+  });
+
+  Object.keys(porPraia).forEach((ps) => {
+    const grupo = porPraia[ps];
+    if (grupo.itens.length < 2) {
+      console.log("hub pulado (menos de 2 imoveis):", ps);
+      return;
+    }
+    const { html, url } = paginaHub(grupo.praia, grupo.itens);
+    const dir = path.join(RAIZ, ps);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
+    urlsGeradas.push({ url, prioridade: "0.9" });
+    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
+  });
+
+  fs.writeFileSync(path.join(RAIZ, "dados", "urls-geradas.json"), JSON.stringify(urlsGeradas, null, 2), "utf8");
+  console.log("\nTotal de paginas geradas:", urlsGeradas.length);
+  console.log("Rode node gerador/gerar-sitemap.js para atualizar o sitemap.xml.");
+}
+
+main();

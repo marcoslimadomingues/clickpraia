@@ -457,3 +457,246 @@ footer p {
     scroll-behavior: auto !important;
   }
 }
+
+/* Breadcrumb */
+.breadcrumb {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 10px var(--space) 0;
+}
+
+.breadcrumb ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.breadcrumb li:not(:last-child)::after {
+  content: "›";
+  margin-left: 6px;
+  color: var(--muted);
+}
+
+.breadcrumb a {
+  color: var(--brand-strong);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Ficha tecnica / listas de detalhe */
+.detail-page h2 {
+  font-size: clamp(1.15rem, 4vw, 1.4rem);
+  margin: 28px 0 10px;
+  color: var(--ink);
+}
+
+.detail-page .lista {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.lista-comodidades,
+.lista-proximo,
+.lista-outros {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.lista-comodidades {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.lista-comodidades li,
+.lista-proximo li {
+  background: #f4f9fc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.92rem;
+}
+
+.lista-outros li a {
+  display: block;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Tabela de diarias */
+.tabela-diarias {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 4px;
+  font-size: 0.95rem;
+}
+
+.tabela-diarias caption {
+  text-align: left;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.tabela-diarias th,
+.tabela-diarias td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.tabela-diarias thead th {
+  background: #e2f0f9;
+  color: var(--brand-strong);
+}
+
+.aviso-pendente {
+  background: #fff8f0;
+  border: 1px solid #eed6c2;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* FAQ */
+.faq details {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: var(--surface);
+}
+
+.faq summary {
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.faq p {
+  margin: 8px 0 4px;
+  color: var(--muted);
+}
+
+/* Hub de praia */
+.filtros {
+  display: grid;
+  gap: 10px;
+  padding: 0 var(--space) 8px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+  .filtros {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: end;
+  }
+}
+
+.filtros label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.filtros input[type="number"] {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.filtros input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+#lista-hub {
+  display: grid;
+  gap: 16px;
+  padding: 8px var(--space) 24px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+
+@media (min-width: 700px) {
+  #lista-hub {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card-hub {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgb(6 30 46 / 8%);
+}
+
+.card-hub a {
+  text-decoration: none;
+  color: var(--ink);
+  display: block;
+}
+
+.card-hub img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #d8e4ec;
+}
+
+.card-hub h3 {
+  margin: 10px 12px 4px;
+  font-size: 1.1rem;
+}
+
+.card-hub p {
+  margin: 0 12px 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+/* Guias */
+.guia-conteudo {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 0 var(--space) 32px;
+}
+
+.guia-conteudo h2 {
+  margin-top: 28px;
+}
+
+.guia-conteudo p,
+.guia-conteudo li {
+  color: var(--ink);
+}
+
+.bloco-imoveis-guia {
+  margin-top: 32px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
