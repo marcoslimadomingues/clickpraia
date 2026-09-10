@@ -11,6 +11,8 @@
   <link rel="canonical" href="https://clickpraia.com.br/canoa-quebrada/casa-exemplo-2-canoa-quebrada/">
   <link rel="preconnect" href="https://wa.me">
 
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
   <link rel="stylesheet" href="/styles.css">
   <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
 
@@ -91,5 +93,14 @@
       </a>
     </div>
   </div>
+
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
 </body>
 </html>

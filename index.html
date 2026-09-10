@@ -3,49 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>ClickPraia | Aluguel de Temporada em Praias de SP</title>
-  <meta name="description" content="Casas, apartamentos e chales para aluguel de temporada em Praia Grande, Ubatuba e Ilhabela. Precos e disponibilidade direto no WhatsApp.">
+  <title>ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE</title>
+  <meta name="description" content="Casas e imóveis para aluguel de temporada em Canoa Quebrada, Aracati/CE. Preços e disponibilidade direto no WhatsApp.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0a5c8a">
   <meta name="format-detection" content="telephone=no">
   <link rel="canonical" href="https://clickpraia.com.br/">
   <link rel="preconnect" href="https://wa.me">
 
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="assets/images/placeholder.svg" type="image/svg+xml">
+  <!-- SILUS: substituir antes de publicar - token de verificacao do Search Console -->
+  <meta name="google-site-verification" content="{{GSC_TOKEN}}">
+
+  <!-- CSP via meta: GitHub Pages nao permite header HTTP customizado.
+       Nao cobre frame-ancestors (so funciona como header real). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'self'; form-action 'self'">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/images/placeholder.svg" type="image/svg+xml">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="ClickPraia">
-  <meta property="og:title" content="ClickPraia | Aluguel de Temporada em Praias de SP">
-  <meta property="og:description" content="Casas, apartamentos e chales em Praia Grande, Ubatuba e Ilhabela. Reserva rapida no WhatsApp.">
+  <meta property="og:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
+  <meta property="og:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
   <meta property="og:url" content="https://clickpraia.com.br/">
-  <meta property="og:image" content="https://clickpraia.com.br/assets/images/capa-og.jpg">
+  <!-- SILUS: substituir antes de publicar - og:image/twitter:image ficam de fora ate existir foto de capa real -->
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Praias de SP">
-  <meta name="twitter:description" content="Casas, apartamentos e chales em Praia Grande, Ubatuba e Ilhabela. Reserva rapida no WhatsApp.">
-  <meta name="twitter:image" content="https://clickpraia.com.br/assets/images/capa-og.jpg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
+  <meta name="twitter:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "RealEstateAgent",
-      "name": "ClickPraia",
-      "url": "https://clickpraia.com.br/",
-      "areaServed": "Brasil",
-      "knowsLanguage": "pt-BR",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "reservas",
-        "availableLanguage": ["Portuguese"],
-        "telephone": "+55-85-99428-8060"
-      }
-    }
-  </script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LodgingBusiness","@id":"https://clickpraia.com.br/#negocio","name":"ClickPraia","url":"https://clickpraia.com.br/","areaServed":"Canoa Quebrada, Aracati - CE","knowsLanguage":"pt-BR","contactPoint":{"@type":"ContactPoint","contactType":"reservas","availableLanguage":["Portuguese"],"telephone":"+558599428060"}}</script>
 </head>
 <body>
-  <a class="skip-link" href="#lista-imoveis">Pular para lista de imoveis</a>
+  <a class="skip-link" href="#lista-imoveis">Pular para lista de imóveis</a>
 
   <div class="page">
     <header class="site-header">
@@ -53,44 +44,114 @@
         <p class="brand">clickpraia.com.br</p>
       </div>
       <div class="hero">
-        <h1>Aluguel de temporada em praias de SP</h1>
-        <p class="subtitle">Escolha seu imovel, veja fotos e informacoes completas, e reserve direto no WhatsApp.</p>
+        <h1>Aluguel de temporada em Canoa Quebrada</h1>
+        <p class="subtitle">Escolha seu imóvel, veja fotos e informações completas, e reserve direto no WhatsApp.</p>
       </div>
       <ul class="trust-row">
-        <li>Resposta rapida no WhatsApp</li>
-        <li>Precos e regras claros</li>
-        <li>3 imoveis disponiveis</li>
+        <li>Resposta rápida no WhatsApp</li>
+        <li>Preços e regras claros</li>
+        <li>3 imóveis cadastrados</li>
       </ul>
     </header>
 
     <main id="conteudo">
       <div class="section-intro">
-        <h2>Imoveis disponiveis</h2>
-        <p>Casas, apartamentos e chales com contato direto para reserva.</p>
+        <h2>Imóveis em Canoa Quebrada</h2>
+        <p>Casas e apartamentos com contato direto para reserva.</p>
       </div>
-      <section id="lista-imoveis" aria-label="Lista de imoveis"></section>
+      <section id="lista-imoveis" aria-label="Lista de imóveis">
+      <article class="card" id="casa-exemplo-1-canoa-quebrada">
+        <header class="card-header">
+          <h3><a href="/canoa-quebrada/casa-exemplo-1-canoa-quebrada/">Casa Exemplo 1</a></h3>
+          <span class="badge">Canoa Quebrada</span>
+        </header>
+        <div class="galeria" aria-label="Galeria de fotos">
+          <figure><a href="/canoa-quebrada/casa-exemplo-1-canoa-quebrada/"><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de Casa Exemplo 1" loading="lazy" decoding="async"></a></figure>
+        </div>
+        <div class="info">
+          <p class="descricao">Descrição em breve.</p>
+          <div class="cta-group">
+            <a class="cta secondary" href="/canoa-quebrada/casa-exemplo-1-canoa-quebrada/">Ver detalhes</a>
+            <a class="cta" href="https://wa.me/558599428060?text=Ola!%20Tenho%20interesse%20no%20imovel%3A%20Casa%20Exemplo%201%20(Canoa%20Quebrada)." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+          </div>
+        </div>
+      </article>
+      <article class="card" id="casa-exemplo-2-canoa-quebrada">
+        <header class="card-header">
+          <h3><a href="/canoa-quebrada/casa-exemplo-2-canoa-quebrada/">Casa Exemplo 2</a></h3>
+          <span class="badge">Canoa Quebrada</span>
+        </header>
+        <div class="galeria" aria-label="Galeria de fotos">
+          <figure><a href="/canoa-quebrada/casa-exemplo-2-canoa-quebrada/"><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de Casa Exemplo 2" loading="lazy" decoding="async"></a></figure>
+        </div>
+        <div class="info">
+          <p class="descricao">Descrição em breve.</p>
+          <div class="cta-group">
+            <a class="cta secondary" href="/canoa-quebrada/casa-exemplo-2-canoa-quebrada/">Ver detalhes</a>
+            <a class="cta" href="https://wa.me/558599428060?text=Ola!%20Tenho%20interesse%20no%20imovel%3A%20Casa%20Exemplo%202%20(Canoa%20Quebrada)." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+          </div>
+        </div>
+      </article>
+      <article class="card" id="casa-exemplo-3-canoa-quebrada">
+        <header class="card-header">
+          <h3><a href="/canoa-quebrada/casa-exemplo-3-canoa-quebrada/">Casa Exemplo 3</a></h3>
+          <span class="badge">Canoa Quebrada</span>
+        </header>
+        <div class="galeria" aria-label="Galeria de fotos">
+          <figure><a href="/canoa-quebrada/casa-exemplo-3-canoa-quebrada/"><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de Casa Exemplo 3" loading="lazy" decoding="async"></a></figure>
+        </div>
+        <div class="info">
+          <p class="descricao">Descrição em breve.</p>
+          <div class="cta-group">
+            <a class="cta secondary" href="/canoa-quebrada/casa-exemplo-3-canoa-quebrada/">Ver detalhes</a>
+            <a class="cta" href="https://wa.me/558599428060?text=Ola!%20Tenho%20interesse%20no%20imovel%3A%20Casa%20Exemplo%203%20(Canoa%20Quebrada)." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+          </div>
+        </div>
+      </article>
+      </section>
+
+      <div class="section-intro"><h2>Explore por praia</h2></div><ul class="lista-outros">
+        <li><a href="/canoa-quebrada/">Imóveis em Canoa Quebrada</a></li>
+      </ul>
+
+      <div class="section-intro">
+        <h2>Guias de Canoa Quebrada</h2>
+      </div>
+      <ul class="lista-outros">
+        <li><a href="/guias/como-ir-de-fortaleza-a-canoa-quebrada/">Como ir de Fortaleza a Canoa Quebrada</a></li>
+        <li><a href="/guias/o-que-fazer-em-canoa-quebrada-em-3-dias/">O que fazer em Canoa Quebrada em 3 dias</a></li>
+        <li><a href="/guias/reveillon-e-carnaval-em-canoa-quebrada/">Réveillon e Carnaval em Canoa Quebrada</a></li>
+        <li><a href="/guias/canoa-quebrada-com-criancas/">Canoa Quebrada com crianças</a></li>
+        <li><a href="/guias/onde-ficar-em-canoa-quebrada/">Onde ficar em Canoa Quebrada</a></li>
+      </ul>
     </main>
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
-      <p>Praia Grande, Ubatuba e Ilhabela - SP</p>
+      <p>Canoa Quebrada, Aracati - CE</p>
     </footer>
 
     <div class="sticky-cta">
-      <a class="cta" href="https://wa.me/558599428060?text=Ola%21%20Quero%20saber%20mais%20sobre%20os%20imoveis%20do%20ClickPraia." target="_blank" rel="noopener noreferrer">
+      <a class="cta" href="https://wa.me/558599428060?text=Ola!%20Quero%20saber%20mais%20sobre%20os%20imoveis%20do%20ClickPraia." target="_blank" rel="noopener noreferrer">
         Falar no WhatsApp
       </a>
     </div>
 
     <noscript>
       <section class="noscript-box">
-        <h2>Ative o JavaScript</h2>
-        <p>Este site usa JavaScript para carregar os imoveis.</p>
+        <h2>Conteúdo disponível sem JavaScript</h2>
+        <p>Esta página funciona mesmo sem JavaScript ativado.</p>
       </section>
     </noscript>
   </div>
 
-  <script src="imoveis.js"></script>
-  <script src="script.js"></script>
+  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{GA4_ID}}');
+  </script>
 </body>
 </html>
