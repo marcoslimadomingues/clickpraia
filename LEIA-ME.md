@@ -13,8 +13,13 @@
 node gerador/gerar.js && node gerador/gerar-sitemap.js
 ```
 
-Isso recria `index.html`, todas as páginas em `/canoa-quebrada/<slug>/`, os hubs de
-praia (`/<praia>/`), os 5 guias em `/guias/`, e atualiza `sitemap.xml`.
+Isso recria `index.html`, todas as páginas em `/<praia>/<slug>/`, os hubs de
+praia (`/<praia>/`, só quando há 2+ imóveis ativos na mesma praia), os 5 guias em
+`/guias/`, e atualiza `sitemap.xml`.
+
+Quando `capacidade` for 20 ou mais, a página do imóvel entra automaticamente no
+posicionamento "aluguel para grupos" (título, H1, FAQ e badge ajustados para esse
+nicho). Abaixo de 20, usa o formato padrão de imóvel.
 
 4. Confira o resultado abrindo `index.html` no navegador, depois `git add`,
    `git commit` e `git push`.
@@ -31,10 +36,10 @@ Basta cadastrar imóveis com `"praia": "Nome da Praia"` no JSON — o gerador cr
 pasta `/nome-da-praia/` automaticamente. O hub da praia só é gerado quando há
 2 ou mais imóveis ativos nela.
 
-## Textos pendentes de configuração (marcados `SILUS` no código)
+## Configuração já aplicada
 
-- `{{GA4_ID}}` — ID de métricas do Google Analytics 4, em todas as páginas.
-- `{{GSC_TOKEN}}` — token de verificação do Google Search Console, na home.
+GA4 (`G-KDPDEB6KVY`) e a tag de verificação do Google Search Console já estão
+preenchidos em todas as páginas.
 
 Veja o relatório de auditoria da conversa que gerou este site para a lista
-completa do que falta preencher.
+completa do que falta preencher (dados reais dos imóveis, fotos, etc).

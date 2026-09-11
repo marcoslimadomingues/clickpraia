@@ -2,8 +2,8 @@
   "whatsapp_padrao": "558599428060",
   "imoveis": [
     {
-      "slug": "casa-exemplo-1-canoa-quebrada",
-      "nome": "Casa Exemplo 1",
+      "slug": "casa-para-grupos-canoa-quebrada",
+      "nome": "Casa para Grupos Canoa Quebrada",
       "praia": "Canoa Quebrada",
       "cidade": "Aracati",
       "tipo": "casa",
@@ -32,11 +32,11 @@
       "ativo": false
     },
     {
-      "slug": "casa-exemplo-2-canoa-quebrada",
-      "nome": "Casa Exemplo 2",
-      "praia": "Canoa Quebrada",
+      "slug": "casa-para-grupos-majorlandia",
+      "nome": "Casa para Grupos Majorlândia",
+      "praia": "Majorlândia",
       "cidade": "Aracati",
-      "tipo": "apartamento",
+      "tipo": "casa",
       "quartos": null,
       "camas": null,
       "banheiros": null,
@@ -62,11 +62,11 @@
       "ativo": false
     },
     {
-      "slug": "casa-exemplo-3-canoa-quebrada",
-      "nome": "Casa Exemplo 3",
-      "praia": "Canoa Quebrada",
+      "slug": "casa-para-grupos-lagoa-do-mato",
+      "nome": "Casa para Grupos Lagoa do Mato",
+      "praia": "Lagoa do Mato",
       "cidade": "Aracati",
-      "tipo": "chale",
+      "tipo": "casa",
       "quartos": null,
       "camas": null,
       "banheiros": null,

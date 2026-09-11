@@ -61,11 +61,17 @@ function tipoLabel(tipo) {
   return map[tipo] || (tipo ? tipo.charAt(0).toUpperCase() + tipo.slice(1) : "Imóvel");
 }
 
-function gerarFAQ(imovel) {
+function gerarFAQ(imovel, paraGrupo) {
+  const chegadaTexto = imovel.praia === "Canoa Quebrada"
+    ? "Canoa Quebrada fica a cerca de 160 km de Fortaleza, geralmente entre 2h e 3h de carro pela CE-040, ou por onibus/transfer com saida de Fortaleza. Veja o guia \"Como ir de Fortaleza a Canoa Quebrada\" para detalhes."
+    : `${imovel.praia} fica no municipio de Aracati/CE. Confirme a melhor rota e o tempo de viagem a partir da sua cidade de origem direto no WhatsApp.`;
+
   const perguntas = [
     {
-      q: `Como funciona o pagamento da ${imovel.nome}?`,
-      a: "Reserva combinada direto com o anfitriao pelo WhatsApp. Peca a forma de pagamento e as condicoes na conversa antes de confirmar a data."
+      q: paraGrupo ? `Como funciona o pagamento para grupo na ${imovel.nome}?` : `Como funciona o pagamento da ${imovel.nome}?`,
+      a: paraGrupo
+        ? "Reserva combinada direto com o anfitriao pelo WhatsApp. Da pra combinar pagamento dividido entre os participantes do grupo - fale as condicoes antes de confirmar a data."
+        : "Reserva combinada direto com o anfitriao pelo WhatsApp. Peca a forma de pagamento e as condicoes na conversa antes de confirmar a data."
     },
     {
       q: "Qual o horario de check-in e check-out?",
@@ -80,14 +86,14 @@ function gerarFAQ(imovel) {
         : "Confirme a politica de pets direto no WhatsApp antes de reservar."
     },
     {
-      q: "Tem vaga de estacionamento?",
+      q: paraGrupo ? "Quantas vagas de garagem tem para o grupo?" : "Tem vaga de estacionamento?",
       a: imovel.vagas_garagem
         ? `Sim, ${imovel.vagas_garagem} vaga(s) de garagem inclusas.`
         : "Confirme a disponibilidade de vaga de garagem direto no WhatsApp."
     },
     {
-      q: "Como chegar a Canoa Quebrada saindo de Fortaleza?",
-      a: "Canoa Quebrada fica a cerca de 160 km de Fortaleza, geralmente entre 2h e 3h de carro pela CE-040, ou por onibus/transfer com saida de Fortaleza. Veja o guia \"Como ir de Fortaleza a Canoa Quebrada\" para detalhes."
+      q: `Como chegar a ${imovel.praia} saindo de Fortaleza?`,
+      a: chegadaTexto
     },
     {
       q: `Qual a distancia da ${imovel.nome} até a praia?`,
@@ -96,6 +102,22 @@ function gerarFAQ(imovel) {
         : "Confirme a distancia exata direto no WhatsApp."
     }
   ];
+
+  if (paraGrupo) {
+    perguntas.push(
+      {
+        q: `A ${imovel.nome} comporta mesmo ${imovel.capacidade} pessoas?`,
+        a: imovel.camas
+          ? `Sim. A casa tem ${imovel.camas} camas distribuidas em ${imovel.quartos || "varios"} quartos para acomodar o grupo. Confirme a configuracao exata (camas de casal, solteiro, beliche) direto no WhatsApp.`
+          : "Confirme a distribuicao exata de camas e quartos direto no WhatsApp antes de fechar a reserva para o grupo."
+      },
+      {
+        q: "Tem regras específicas para grupo grande ou evento?",
+        a: "Sim, casas para grupo grande costumam ter regras sobre horario de silencio, numero maximo de visitantes extras e uso de areas comuns. Confirme as regras da casa direto com o anfitriao antes de fechar."
+      }
+    );
+  }
+
   return perguntas;
 }
 
@@ -104,16 +126,20 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   const praiaSlug = slugPraia(imovel.praia);
   const url = `${DOMINIO}/${praiaSlug}/${imovel.slug}/`;
   const tipo = tipoLabel(imovel.tipo);
+  const paraGrupo = imovel.capacidade != null && imovel.capacidade >= 20;
   const capacidadeTxt = imovel.capacidade ? `para ${imovel.capacidade} pessoas` : "";
   const distanciaTxt = imovel.distancia_praia_metros != null ? `${fmtDist(imovel.distancia_praia_metros)} da praia` : "";
-  const tituloPartes = [`${tipo}${imovel.tem_piscina ? " com piscina" : ""} em ${imovel.praia}`, capacidadeTxt, imovel.quartos ? `${imovel.quartos} quartos` : "", distanciaTxt]
-    .filter(Boolean);
-  const titulo = tituloPartes.join(" — ").replace(" — " + capacidadeTxt, capacidadeTxt ? ` para ${imovel.capacidade} pessoas` : "");
-  const h1 = `${tipo}${imovel.tem_piscina ? " com piscina" : ""} em ${imovel.praia}${capacidadeTxt ? " para " + imovel.capacidade + " pessoas" : ""}${imovel.quartos ? " — " + imovel.quartos + " quartos" : ""}${distanciaTxt ? ", " + distanciaTxt : ""}`;
-  const descMeta = imovel.descricao_curta || `${tipo} em ${imovel.praia}, Aracati/CE. Fale direto no WhatsApp para disponibilidade e valores.`;
-  const waMsg = `Ola! Tenho interesse no imovel: ${imovel.nome} (${imovel.praia}).`;
+  const h1 = paraGrupo
+    ? `Aluguel para grupos em ${imovel.praia} — ${tipo}${imovel.tem_piscina ? " com piscina" : ""} para ${imovel.capacidade} pessoas${imovel.quartos ? ", " + imovel.quartos + " quartos" : ""}`
+    : `${tipo}${imovel.tem_piscina ? " com piscina" : ""} em ${imovel.praia}${capacidadeTxt ? " para " + imovel.capacidade + " pessoas" : ""}${imovel.quartos ? " — " + imovel.quartos + " quartos" : ""}${distanciaTxt ? ", " + distanciaTxt : ""}`;
+  const descMeta = imovel.descricao_curta || (paraGrupo
+    ? `Casa para grupo grande em ${imovel.praia}, Aracati/CE, capacidade para ${imovel.capacidade} pessoas. Ideal para família grande, confraternização ou evento. Fale no WhatsApp.`
+    : `${tipo} em ${imovel.praia}, Aracati/CE. Fale direto no WhatsApp para disponibilidade e valores.`);
+  const waMsg = paraGrupo
+    ? `Ola! Tenho interesse no imovel para grupo: ${imovel.nome} (${imovel.praia}), capacidade ${imovel.capacidade} pessoas.`
+    : `Ola! Tenho interesse no imovel: ${imovel.nome} (${imovel.praia}).`;
   const waHref = waLink(imovel.whatsapp || WHATSAPP_PADRAO, waMsg);
-  const faq = gerarFAQ(imovel);
+  const faq = gerarFAQ(imovel, paraGrupo);
 
   const fichaItens = [
     campoFicha("Capacidade", imovel.capacidade ? `${imovel.capacidade} pessoas` : null),
@@ -122,7 +148,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     campoFicha("Banheiros", imovel.banheiros),
     campoFicha("Vagas de garagem", imovel.vagas_garagem),
     campoFicha("Distância da praia", fmtDist(imovel.distancia_praia_metros)),
-    campoFicha("Distância da Broadway", fmtDist(imovel.distancia_broadway_metros))
+    campoFicha(imovel.praia === "Canoa Quebrada" ? "Distância da Broadway" : "Distância do centro", fmtDist(imovel.distancia_broadway_metros))
   ].filter(Boolean).join("\n        ");
 
   const comodidades = [
@@ -165,17 +191,25 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
 
   const pontosProximos = [];
   if (imovel.distancia_praia_metros != null) pontosProximos.push(`Praia de ${imovel.praia}: ${fmtDist(imovel.distancia_praia_metros)}`);
-  if (imovel.distancia_broadway_metros != null) pontosProximos.push(`Broadway (rua principal de Canoa Quebrada): ${fmtDist(imovel.distancia_broadway_metros)}`);
+  if (imovel.distancia_broadway_metros != null) {
+    pontosProximos.push(
+      imovel.praia === "Canoa Quebrada"
+        ? `Broadway (rua principal de Canoa Quebrada): ${fmtDist(imovel.distancia_broadway_metros)}`
+        : `Centro de ${imovel.praia}: ${fmtDist(imovel.distancia_broadway_metros)}`
+    );
+  }
   const blocoProximo = pontosProximos.length
     ? `<ul class="lista-proximo">${pontosProximos.map((p) => `<li>${escHtml(p)}</li>`).join("")}</ul>`
     : `<p class="aviso-pendente"><!-- SILUS: substituir antes de publicar - pontos de referencia --> Distâncias a pé de mercado, farmácia e praia ainda não cadastradas.</p>`;
 
+  const outrosMesmaPraia = outrosDaMesmaPraia.every((o) => o.praia === imovel.praia);
   const outrosHtml = outrosDaMesmaPraia
     .slice(0, 3)
     .map(
-      (o) => `<li><a href="/${slugPraia(o.praia)}/${o.slug}/">${escHtml(o.nome)}</a></li>`
+      (o) => `<li><a href="/${slugPraia(o.praia)}/${o.slug}/">${escHtml(o.nome)}${outrosMesmaPraia ? "" : " — " + escHtml(o.praia)}</a></li>`
     )
     .join("\n        ");
+  const tituloOutros = outrosMesmaPraia ? `Outros imóveis em ${escHtml(imovel.praia)}` : "Outras casas para grupo grande da ClickPraia";
 
   const breadcrumbJsonLd = {
     "@type": "BreadcrumbList",
@@ -201,7 +235,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     "@type": "VacationRental",
     "@id": `${url}#imovel`,
     name: imovel.nome,
-    description: imovel.descricao_longa || imovel.descricao_curta || null,
+    description: imovel.descricao_longa || imovel.descricao_curta || descMeta,
     url: url,
     dateModified: hoje,
     telephone: "+55" + (imovel.whatsapp || WHATSAPP_PADRAO).replace(/^55/, ""),
@@ -230,7 +264,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
             "@id": `${DOMINIO}/#negocio`,
             name: "ClickPraia",
             url: `${DOMINIO}/`,
-            areaServed: "Canoa Quebrada, Aracati - CE",
+            areaServed: "Aracati - CE",
             taxID: CNPJ,
             sameAs: REDES_SOCIAIS
           },
@@ -294,7 +328,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
         ${galeriaHtml}
       </div>
 
-      <span class="badge">${escHtml(imovel.praia)}</span>
+      <span class="badge">${escHtml(imovel.praia)}</span>${paraGrupo ? ` <span class="badge badge-grupo">Grupo grande</span>` : ""}
       <h1>${escHtml(h1)}</h1>
       <p class="descricao">${escHtml(imovel.descricao_curta || "Descrição completa em breve.")}</p>
 
@@ -316,7 +350,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
         ${faq.map((f) => `<details><summary>${escHtml(f.q)}</summary><p>${escHtml(f.a)}</p></details>`).join("\n        ")}
       </div>
 
-      ${outrosHtml ? `<h2>Outros imóveis em ${escHtml(imovel.praia)}</h2><ul class="lista-outros">${outrosHtml}</ul>` : ""}
+      ${outrosHtml ? `<h2>${tituloOutros}</h2><ul class="lista-outros">${outrosHtml}</ul>` : ""}
 
       <div class="cta-group">
         <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
@@ -325,7 +359,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
-      <p>Canoa Quebrada, Aracati - CE</p>
+      <p>${escHtml(imovel.praia)}, ${escHtml(imovel.cidade || "Aracati")} - CE</p>
       <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
@@ -485,7 +519,7 @@ function paginaHome(imoveis, porPraia) {
     "@id": `${DOMINIO}/#negocio`,
     name: "ClickPraia",
     url: `${DOMINIO}/`,
-    areaServed: "Canoa Quebrada, Aracati - CE",
+    areaServed: "Aracati - CE",
     knowsLanguage: "pt-BR",
     dateModified: hoje,
     taxID: CNPJ,
@@ -503,8 +537,8 @@ function paginaHome(imoveis, porPraia) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE</title>
-  <meta name="description" content="Casas e imóveis para aluguel de temporada em Canoa Quebrada, Aracati/CE. Fotos, preços e disponibilidade direto no WhatsApp, sem taxa de reserva.">
+  <title>ClickPraia | Aluguel para Grupos Grandes em Aracati - CE</title>
+  <meta name="description" content="Casas para grupos grandes (20+ pessoas) em Canoa Quebrada, Majorlândia e Lagoa do Mato, Aracati/CE. Fotos, preços e disponibilidade direto no WhatsApp.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0a5c8a">
   <meta name="format-detection" content="telephone=no">
@@ -524,15 +558,15 @@ function paginaHome(imoveis, porPraia) {
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="ClickPraia">
-  <meta property="og:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
-  <meta property="og:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
+  <meta property="og:title" content="ClickPraia | Aluguel para Grupos Grandes em Aracati - CE">
+  <meta property="og:description" content="Casas para grupos grandes em Canoa Quebrada, Majorlândia e Lagoa do Mato, Aracati/CE. Reserva rápida no WhatsApp.">
   <meta property="og:url" content="${DOMINIO}/">
   <meta property="og:image" content="${DOMINIO}/assets/images/capa-og.jpg">
   <meta property="article:modified_time" content="${hoje}">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ClickPraia | Aluguel de Temporada em Canoa Quebrada - CE">
-  <meta name="twitter:description" content="Casas e imóveis em Canoa Quebrada, Aracati/CE. Reserva rápida no WhatsApp.">
+  <meta name="twitter:title" content="ClickPraia | Aluguel para Grupos Grandes em Aracati - CE">
+  <meta name="twitter:description" content="Casas para grupos grandes em Canoa Quebrada, Majorlândia e Lagoa do Mato, Aracati/CE. Reserva rápida no WhatsApp.">
   <meta name="twitter:image" content="${DOMINIO}/assets/images/capa-og.jpg">
 
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -547,20 +581,20 @@ function paginaHome(imoveis, porPraia) {
         <p class="brand">clickpraia.com.br</p>
       </div>
       <div class="hero">
-        <h1>Aluguel de temporada em Canoa Quebrada</h1>
-        <p class="subtitle">Escolha seu imóvel, veja fotos e informações completas, e reserve direto no WhatsApp.</p>
+        <h1>Aluguel para grupos grandes em Aracati - CE</h1>
+        <p class="subtitle">Casas para 20+ pessoas em Canoa Quebrada, Majorlândia e Lagoa do Mato. Reserve direto no WhatsApp.</p>
       </div>
       <ul class="trust-row">
         <li>Resposta rápida no WhatsApp</li>
         <li>Preços e regras claros</li>
-        <li>${imoveis.length} imóve${imoveis.length === 1 ? "l" : "is"} cadastrados</li>
+        <li>${imoveis.length} casa${imoveis.length === 1 ? "" : "s"} para grupo grande</li>
       </ul>
     </header>
 
     <main id="conteudo">
       <div class="section-intro">
-        <h2>Imóveis em Canoa Quebrada</h2>
-        <p>Casas e apartamentos com contato direto para reserva.</p>
+        <h2>Casas para grupos grandes em Aracati</h2>
+        <p>Capacidade para 20 ou mais pessoas, com contato direto para reserva.</p>
       </div>
       <section id="lista-imoveis" aria-label="Lista de imóveis">
       ${cards}
@@ -582,7 +616,7 @@ function paginaHome(imoveis, porPraia) {
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
-      <p>Canoa Quebrada, Aracati - CE</p>
+      <p>Canoa Quebrada, Majorlândia e Lagoa do Mato — Aracati, CE</p>
       <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
@@ -707,7 +741,7 @@ function paginaGuia(guia, imoveisDestaque) {
       ${corpoHtml}
 
       <div class="bloco-imoveis-guia">
-        <h2>Imóveis em Canoa Quebrada</h2>
+        <h2>Casas para grupos grandes da ClickPraia</h2>
         <ul class="lista-outros">
         ${blocoImoveis}
         </ul>
@@ -758,7 +792,8 @@ function main() {
   const urlsGeradas = [];
 
   imoveis.forEach((im) => {
-    const outros = porPraia[slugPraia(im.praia)].itens.filter((o) => o.slug !== im.slug);
+    const outrosMesmaPraia = porPraia[slugPraia(im.praia)].itens.filter((o) => o.slug !== im.slug);
+    const outros = outrosMesmaPraia.length ? outrosMesmaPraia : imoveis.filter((o) => o.slug !== im.slug);
     const { html, url, praiaSlug } = paginaImovel(im, outros);
     const dir = path.join(RAIZ, praiaSlug, im.slug);
     fs.mkdirSync(dir, { recursive: true });

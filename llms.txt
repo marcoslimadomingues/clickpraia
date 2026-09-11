@@ -1,10 +1,13 @@
 # ClickPraia
 
-Aluguel de temporada em praias do Ceará, com foco em Canoa Quebrada (Aracati/CE).
-Reserva direto no WhatsApp, sem formulário e sem carrinho.
+Aluguel de casas para grupos grandes (20+ pessoas) em praias de Aracati, Ceará:
+Canoa Quebrada, Majorlândia e Lagoa do Mato. Reserva direto no WhatsApp, sem
+formulário e sem carrinho.
 
-## Praias
-- [Canoa Quebrada](https://clickpraia.com.br/canoa-quebrada/) — casas e imóveis para temporada em Canoa Quebrada, Aracati/CE.
+## Casas
+- [Casa para Grupos Canoa Quebrada](https://clickpraia.com.br/canoa-quebrada/casa-para-grupos-canoa-quebrada/) — Canoa Quebrada, Aracati/CE.
+- [Casa para Grupos Majorlândia](https://clickpraia.com.br/majorlandia/casa-para-grupos-majorlandia/) — Majorlândia, Aracati/CE.
+- [Casa para Grupos Lagoa do Mato](https://clickpraia.com.br/lagoa-do-mato/casa-para-grupos-lagoa-do-mato/) — Lagoa do Mato, Aracati/CE.
 
 ## Guias
 - [Como ir de Fortaleza a Canoa Quebrada](https://clickpraia.com.br/guias/como-ir-de-fortaleza-a-canoa-quebrada/)
@@ -15,4 +18,6 @@ Reserva direto no WhatsApp, sem formulário e sem carrinho.
 
 ## Contato
 WhatsApp: +55 85 99428-8060
+Instagram: https://www.instagram.com/clickpraia
+Facebook: https://www.facebook.com/clickpraia
 Site: https://clickpraia.com.br/

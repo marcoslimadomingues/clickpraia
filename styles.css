@@ -200,6 +200,13 @@ main {
   white-space: nowrap;
 }
 
+.badge-grupo {
+  background: #fff2e0;
+  color: #8a4a00;
+  border-color: #f0cf9e;
+  margin-left: 6px;
+}
+
 .price-tag {
   padding: 0 16px 12px;
   display: flex;
