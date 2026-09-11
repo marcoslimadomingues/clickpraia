@@ -338,13 +338,12 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     </div>
   </div>
 
-  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDPDEB6KVY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '{{GA4_ID}}');
+    gtag('config', 'G-KDPDEB6KVY');
   </script>
 </body>
 </html>
@@ -436,13 +435,12 @@ function paginaHub(praia, imoveisDaPraia) {
 
   <script src="/hub-filtro.js"></script>
 
-  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDPDEB6KVY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '{{GA4_ID}}');
+    gtag('config', 'G-KDPDEB6KVY');
   </script>
 </body>
 </html>
@@ -605,13 +603,12 @@ function paginaHome(imoveis, porPraia) {
     </noscript>
   </div>
 
-  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDPDEB6KVY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '{{GA4_ID}}');
+    gtag('config', 'G-KDPDEB6KVY');
   </script>
 </body>
 </html>
@@ -735,13 +732,12 @@ function paginaGuia(guia, imoveisDestaque) {
     </div>
   </div>
 
-  <!-- SILUS: substituir antes de publicar - GA4 (ver fase 5 / snippets.md) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{GA4_ID}}"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KDPDEB6KVY"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '{{GA4_ID}}');
+    gtag('config', 'G-KDPDEB6KVY');
   </script>
 </body>
 </html>
