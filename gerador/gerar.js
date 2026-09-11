@@ -369,6 +369,8 @@ function paginaHub(praia, imoveisDaPraia) {
     })
     .join("\n      ");
 
+  const temAtivo = imoveisDaPraia.some((im) => im.ativo === true);
+
   const html = `<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -376,7 +378,7 @@ function paginaHub(praia, imoveisDaPraia) {
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Aluguel de temporada em ${escHtml(praia)} | ClickPraia</title>
   <meta name="description" content="Casas e imóveis para alugar em ${escHtml(praia)}, Aracati/CE. Fotos, preços e reserva direto no WhatsApp.">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content="${temAtivo ? "index, follow, max-image-preview:large" : "noindex, follow"}">
   <meta name="theme-color" content="#0a5c8a">
   <link rel="canonical" href="${url}">
 
@@ -766,8 +768,10 @@ function main() {
     const dir = path.join(RAIZ, praiaSlug, im.slug);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
-    urlsGeradas.push({ url, prioridade: "0.8" });
-    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
+    if (im.ativo === true) {
+      urlsGeradas.push({ url, prioridade: "0.8" });
+    }
+    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")), im.ativo === true ? "" : "(noindex, fora do sitemap)");
   });
 
   Object.keys(porPraia).forEach((ps) => {
@@ -780,8 +784,11 @@ function main() {
     const dir = path.join(RAIZ, ps);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, "index.html"), html, "utf8");
-    urlsGeradas.push({ url, prioridade: "0.9" });
-    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")));
+    const temAtivo = grupo.itens.some((im) => im.ativo === true);
+    if (temAtivo) {
+      urlsGeradas.push({ url, prioridade: "0.9" });
+    }
+    console.log("gerado:", path.relative(RAIZ, path.join(dir, "index.html")), temAtivo ? "" : "(sem imovel ativo, fora do sitemap)");
   });
 
   fs.writeFileSync(path.join(RAIZ, "index.html"), paginaHome(imoveis, porPraia), "utf8");
