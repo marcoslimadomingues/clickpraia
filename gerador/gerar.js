@@ -168,11 +168,11 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
           const eager = i === 0;
           return `<figure><picture>
           <source srcset="${escHtml(f.arquivo_webp || f.arquivo)}" type="image/webp">
-          <img src="${escHtml(f.arquivo)}" alt="${escHtml(f.alt)}" width="800" height="600" loading="${eager ? "eager" : "lazy"}" fetchpriority="${eager ? "high" : "low"}" decoding="async" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
+          <img src="${escHtml(f.arquivo)}" alt="${escHtml(f.alt)}" title="${escHtml(f.alt)}" width="800" height="600" loading="${eager ? "eager" : "lazy"}" fetchpriority="${eager ? "high" : "low"}" decoding="async" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
         </picture></figure>`;
         })
         .join("\n        ")
-    : `<figure><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de ${escHtml(imovel.nome)}" width="800" height="600" loading="eager"></figure>
+    : `<figure><img src="/assets/images/placeholder.svg" alt="Foto ainda não cadastrada de ${escHtml(imovel.nome)}" title="Foto ainda não cadastrada de ${escHtml(imovel.nome)}" width="800" height="600" loading="eager"></figure>
         <!-- SILUS: substituir antes de publicar - fotos reais do imovel -->`;
 
   const diariaBaixa = fmtBRL(imovel.diaria_baixa);
@@ -206,7 +206,7 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   const outrosHtml = outrosDaMesmaPraia
     .slice(0, 3)
     .map(
-      (o) => `<li><a href="/${slugPraia(o.praia)}/${o.slug}/">${escHtml(o.nome)}${outrosMesmaPraia ? "" : " — " + escHtml(o.praia)}</a></li>`
+      (o) => `<li><a href="/${slugPraia(o.praia)}/${o.slug}/" title="Ver detalhes de ${escHtml(o.nome)} em ${escHtml(o.praia)}">${escHtml(o.nome)}${outrosMesmaPraia ? "" : " — " + escHtml(o.praia)}</a></li>`
     )
     .join("\n        ");
   const tituloOutros = outrosMesmaPraia ? `Outros imóveis em ${escHtml(imovel.praia)}` : "Outras casas para grupo grande da ClickPraia";
@@ -216,8 +216,8 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
     "@id": `${url}#breadcrumb`,
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "ClickPraia", item: `${DOMINIO}/` },
-      { "@type": "ListItem", position: 2, name: imovel.praia, item: `${DOMINIO}/${praiaSlug}/` },
-      { "@type": "ListItem", position: 3, name: imovel.nome, item: url }
+      ...(outrosMesmaPraia ? [{ "@type": "ListItem", position: 2, name: imovel.praia, item: `${DOMINIO}/${praiaSlug}/` }] : []),
+      { "@type": "ListItem", position: outrosMesmaPraia ? 3 : 2, name: imovel.nome, item: url }
     ]
   };
 
@@ -310,15 +310,15 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
   <div class="page">
     <header class="site-header">
       <div class="brand-row">
-        <a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a>
+        <a href="/" title="Ir para a página inicial da ClickPraia"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" title="ClickPraia" width="32" height="32" class="logo-brand"></a>
         <p class="brand">clickpraia.com.br</p>
       </div>
     </header>
 
     <nav class="breadcrumb" aria-label="Trilha de navegação">
       <ol>
-        <li><a href="/">ClickPraia</a></li>
-        <li><a href="/${praiaSlug}/">${escHtml(imovel.praia)}</a></li>
+        <li><a href="/" title="Ir para a página inicial da ClickPraia">ClickPraia</a></li>
+        ${outrosMesmaPraia ? `<li><a href="/${praiaSlug}/" title="Ver imóveis em ${escHtml(imovel.praia)}">${escHtml(imovel.praia)}</a></li>` : `<li>${escHtml(imovel.praia)}</li>`}
         <li aria-current="page">${escHtml(imovel.nome)}</li>
       </ol>
     </nav>
@@ -353,20 +353,20 @@ function paginaImovel(imovel, outrosDaMesmaPraia) {
       ${outrosHtml ? `<h2>${tituloOutros}</h2><ul class="lista-outros">${outrosHtml}</ul>` : ""}
 
       <div class="cta-group">
-        <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+        <a class="cta" href="${waHref}" title="Falar no WhatsApp sobre ${escHtml(imovel.nome)}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
       </div>
     </main>
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>${escHtml(imovel.praia)}, ${escHtml(imovel.cidade || "Aracati")} - CE</p>
-      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" title="ClickPraia no Instagram" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" title="ClickPraia no Facebook" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
-      <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">
+      <a class="cta" href="${waHref}" title="Falar no WhatsApp sobre ${escHtml(imovel.nome)}" target="_blank" rel="noopener noreferrer">
         Falar no WhatsApp sobre ${escHtml(imovel.nome)}
       </a>
     </div>
@@ -393,8 +393,8 @@ function paginaHub(praia, imoveisDaPraia) {
     .map((im) => {
       const foto = im.fotos && im.fotos[0] ? im.fotos[0] : null;
       return `<article class="card-hub" data-capacidade="${im.capacidade || 0}" data-piscina="${im.tem_piscina ? 1 : 0}" data-preco="${im.diaria_baixa || 0}">
-        <a href="/${praiaSlug}/${im.slug}/">
-          <img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" width="400" height="300" loading="lazy">
+        <a href="/${praiaSlug}/${im.slug}/" title="Ver detalhes de ${escHtml(im.nome)}">
+          <img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" title="${escHtml(im.nome)}" width="400" height="300" loading="lazy">
           <h3>${escHtml(im.nome)}</h3>
         </a>
         <p>${escHtml(im.descricao_curta || "Descrição em breve.")}</p>
@@ -431,7 +431,7 @@ function paginaHub(praia, imoveisDaPraia) {
 <body>
   <div class="page">
     <header class="site-header">
-      <div class="brand-row"><a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
+      <div class="brand-row"><a href="/" title="Ir para a página inicial da ClickPraia"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" title="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
       <div class="hero">
         <h1>Aluguel de temporada em ${escHtml(praia)}</h1>
         <p class="subtitle">Casas e imóveis selecionados em ${escHtml(praia)}, Aracati/CE. Fale direto no WhatsApp.</p>
@@ -456,14 +456,14 @@ function paginaHub(praia, imoveisDaPraia) {
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
-      <p><a href="/">Voltar para a página inicial</a></p>
-      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p><a href="/" title="Ir para a página inicial da ClickPraia">Voltar para a página inicial</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" title="ClickPraia no Instagram" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" title="ClickPraia no Facebook" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
-      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis em " + praia + ".")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis em " + praia + ".")}" title="Falar no WhatsApp sobre imóveis em ${escHtml(praia)}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
     </div>
   </div>
 
@@ -491,17 +491,17 @@ function paginaHome(imoveis, porPraia) {
       const waHref = waLink(im.whatsapp || WHATSAPP_PADRAO, `Ola! Tenho interesse no imovel: ${im.nome} (${im.praia}).`);
       return `<article class="card" id="${escHtml(im.slug)}">
         <header class="card-header">
-          <h3><a href="/${praiaSlug}/${im.slug}/">${escHtml(im.nome)}</a></h3>
+          <h3><a href="/${praiaSlug}/${im.slug}/" title="Ver detalhes de ${escHtml(im.nome)}">${escHtml(im.nome)}</a></h3>
           <span class="badge">${escHtml(im.praia)}</span>
         </header>
         <div class="galeria" aria-label="Galeria de fotos">
-          <figure><a href="/${praiaSlug}/${im.slug}/"><img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" width="800" height="600" loading="lazy" decoding="async"></a></figure>
+          <figure><a href="/${praiaSlug}/${im.slug}/" title="Ver detalhes de ${escHtml(im.nome)}"><img src="${foto ? escHtml(foto.arquivo) : "/assets/images/placeholder.svg"}" alt="${foto ? escHtml(foto.alt) : "Foto ainda não cadastrada de " + escHtml(im.nome)}" title="${escHtml(im.nome)}" width="800" height="600" loading="lazy" decoding="async"></a></figure>
         </div>
         <div class="info">
           <p class="descricao">${escHtml(im.descricao_curta || "Descrição em breve.")}</p>
           <div class="cta-group">
-            <a class="cta secondary" href="/${praiaSlug}/${im.slug}/">Ver detalhes</a>
-            <a class="cta" href="${waHref}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+            <a class="cta secondary" href="/${praiaSlug}/${im.slug}/" title="Ver detalhes de ${escHtml(im.nome)}">Ver detalhes</a>
+            <a class="cta" href="${waHref}" title="Falar no WhatsApp sobre ${escHtml(im.nome)}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
           </div>
         </div>
       </article>`;
@@ -510,7 +510,7 @@ function paginaHome(imoveis, porPraia) {
 
   const hubsLinks = Object.keys(porPraia)
     .filter((ps) => porPraia[ps].itens.length >= 2)
-    .map((ps) => `<li><a href="/${ps}/">Imóveis em ${escHtml(porPraia[ps].praia)}</a></li>`)
+    .map((ps) => `<li><a href="/${ps}/" title="Ver imóveis em ${escHtml(porPraia[ps].praia)}">Imóveis em ${escHtml(porPraia[ps].praia)}</a></li>`)
     .join("\n        ");
 
   const jsonLd = {
@@ -572,12 +572,12 @@ function paginaHome(imoveis, porPraia) {
   <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body>
-  <a class="skip-link" href="#lista-imoveis">Pular para lista de imóveis</a>
+  <a class="skip-link" href="#lista-imoveis" title="Pular direto para a lista de imóveis">Pular para lista de imóveis</a>
 
   <div class="page">
     <header class="site-header">
       <div class="brand-row">
-        <a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a>
+        <a href="/" title="Ir para a página inicial da ClickPraia"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" title="ClickPraia" width="32" height="32" class="logo-brand"></a>
         <p class="brand">clickpraia.com.br</p>
       </div>
       <div class="hero">
@@ -606,24 +606,24 @@ function paginaHome(imoveis, porPraia) {
         <h2>Guias de Canoa Quebrada</h2>
       </div>
       <ul class="lista-outros">
-        <li><a href="/guias/como-ir-de-fortaleza-a-canoa-quebrada/">Como ir de Fortaleza a Canoa Quebrada</a></li>
-        <li><a href="/guias/o-que-fazer-em-canoa-quebrada-em-3-dias/">O que fazer em Canoa Quebrada em 3 dias</a></li>
-        <li><a href="/guias/reveillon-e-carnaval-em-canoa-quebrada/">Réveillon e Carnaval em Canoa Quebrada</a></li>
-        <li><a href="/guias/canoa-quebrada-com-criancas/">Canoa Quebrada com crianças</a></li>
-        <li><a href="/guias/onde-ficar-em-canoa-quebrada/">Onde ficar em Canoa Quebrada</a></li>
+        <li><a href="/guias/como-ir-de-fortaleza-a-canoa-quebrada/" title="Ler guia: Como ir de Fortaleza a Canoa Quebrada">Como ir de Fortaleza a Canoa Quebrada</a></li>
+        <li><a href="/guias/o-que-fazer-em-canoa-quebrada-em-3-dias/" title="Ler guia: O que fazer em Canoa Quebrada em 3 dias">O que fazer em Canoa Quebrada em 3 dias</a></li>
+        <li><a href="/guias/reveillon-e-carnaval-em-canoa-quebrada/" title="Ler guia: Réveillon e Carnaval em Canoa Quebrada">Réveillon e Carnaval em Canoa Quebrada</a></li>
+        <li><a href="/guias/canoa-quebrada-com-criancas/" title="Ler guia: Canoa Quebrada com crianças">Canoa Quebrada com crianças</a></li>
+        <li><a href="/guias/onde-ficar-em-canoa-quebrada/" title="Ler guia: Onde ficar em Canoa Quebrada">Onde ficar em Canoa Quebrada</a></li>
       </ul>
     </main>
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
       <p>Canoa Quebrada, Majorlândia e Lagoa do Mato — Aracati, CE</p>
-      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" title="ClickPraia no Instagram" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" title="ClickPraia no Facebook" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
-      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis do ClickPraia.")}" target="_blank" rel="noopener noreferrer">
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Quero saber mais sobre os imoveis do ClickPraia.")}" title="Falar no WhatsApp com a ClickPraia" target="_blank" rel="noopener noreferrer">
         Falar no WhatsApp
       </a>
     </div>
@@ -662,7 +662,7 @@ function paginaGuia(guia, imoveisDestaque) {
 
   const blocoImoveis = imoveisDestaque
     .slice(0, 3)
-    .map((im) => `<li><a href="/${slugPraia(im.praia)}/${im.slug}/">${escHtml(im.nome)}</a> — ${escHtml(im.praia)}</li>`)
+    .map((im) => `<li><a href="/${slugPraia(im.praia)}/${im.slug}/" title="Ver detalhes de ${escHtml(im.nome)}">${escHtml(im.nome)}</a> — ${escHtml(im.praia)}</li>`)
     .join("\n        ");
 
   const jsonLd = JSON.parse(
@@ -685,8 +685,7 @@ function paginaGuia(guia, imoveisDestaque) {
             "@id": `${url}#breadcrumb`,
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "ClickPraia", item: `${DOMINIO}/` },
-              { "@type": "ListItem", position: 2, name: "Guias", item: `${DOMINIO}/guias/` },
-              { "@type": "ListItem", position: 3, name: guia.titulo, item: url }
+              { "@type": "ListItem", position: 2, name: guia.titulo, item: url }
             ]
           }
         ]
@@ -725,13 +724,12 @@ function paginaGuia(guia, imoveisDestaque) {
 <body>
   <div class="page">
     <header class="site-header">
-      <div class="brand-row"><a href="/"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
+      <div class="brand-row"><a href="/" title="Ir para a página inicial da ClickPraia"><img src="/assets/images/logo-clickpraia-header.png" alt="ClickPraia" title="ClickPraia" width="32" height="32" class="logo-brand"></a><p class="brand">clickpraia.com.br</p></div>
     </header>
 
     <nav class="breadcrumb" aria-label="Trilha de navegação">
       <ol>
-        <li><a href="/">ClickPraia</a></li>
-        <li><a href="/guias/">Guias</a></li>
+        <li><a href="/" title="Ir para a página inicial da ClickPraia">ClickPraia</a></li>
         <li aria-current="page">${escHtml(guia.titulo)}</li>
       </ol>
     </nav>
@@ -748,20 +746,20 @@ function paginaGuia(guia, imoveisDestaque) {
       </div>
 
       <div class="cta-group">
-        <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+        <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" title="Falar no WhatsApp com a ClickPraia" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
       </div>
     </main>
 
     <footer>
       <p>ClickPraia | Atendimento direto por WhatsApp</p>
-      <p><a href="/">Voltar para a página inicial</a></p>
-      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+      <p><a href="/" title="Ir para a página inicial da ClickPraia">Voltar para a página inicial</a></p>
+      <p class="rodape-social"><a href="${REDES_SOCIAIS[0]}" title="ClickPraia no Instagram" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href="${REDES_SOCIAIS[1]}" title="ClickPraia no Facebook" target="_blank" rel="noopener noreferrer">Facebook</a></p>
       <p class="cnpj">CNPJ ${CNPJ}</p>
       <p class="atualizado">Página atualizada em <time datetime="${hoje}">${hoje.split("-").reverse().join("/")}</time></p>
     </footer>
 
     <div class="sticky-cta">
-      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+      <a class="cta" href="${waLink(WHATSAPP_PADRAO, "Ola! Vi o guia " + guia.titulo + " e quero saber mais sobre os imoveis.")}" title="Falar no WhatsApp com a ClickPraia" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
     </div>
   </div>
 
